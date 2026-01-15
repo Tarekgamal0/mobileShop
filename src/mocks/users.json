@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "name": "أحمد (المالك)",
+    "username": "admin",
+    "password": "123",
+    "role": "owner",
+    "token": "fake-jwt-token-owner"
+  },
+  {
+    "id": 2,
+    "name": "محمد (البائع)",
+    "username": "seller",
+    "password": "123",
+    "role": "seller",
+    "token": "fake-jwt-token-seller"
+  }
+]
