@@ -45,7 +45,6 @@ function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        {/* <div style={appStyle}>Tarek</div> */}
         <Routes>
           {/* 1. المسارات العامة (بدون Sidebar) */}
           <Route path="/login" element={<Login />} />

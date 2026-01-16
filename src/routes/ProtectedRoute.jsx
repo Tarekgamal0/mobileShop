@@ -1,7 +1,7 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
-const ProtectedRoute = ({ allowedRoles }) => {
+export default function ProtectedRoute({ allowedRoles }) {
   const { user, loading } = useAuth();
   const location = useLocation();
 
@@ -20,6 +20,4 @@ const ProtectedRoute = ({ allowedRoles }) => {
 
   return isAuthorized ? <Outlet /> : <Navigate to="/unauthorized" replace />; // توجيه لصفحة Unauthorized إذا لم يكن لديه الصلاحية
   // outlet لعرض المكونات المحمية إذا كان لديه الصلاحية
-};
-
-export default ProtectedRoute;
+}

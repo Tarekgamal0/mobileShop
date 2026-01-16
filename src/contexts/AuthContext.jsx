@@ -16,7 +16,6 @@ export default function AuthProvider({ children }) {
   }, []);
 
   const login = (userData) => {
-    console.log("Logging in user:", userData);
     setUser(userData);
     localStorage.setItem("user", JSON.stringify(userData));
   };
