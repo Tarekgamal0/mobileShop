@@ -35,7 +35,7 @@ export default function Sidebar() {
     { text: "الموظفين", icon: <People />, path: "/staff", roles: ["owner"] },
     { text: "التقارير", icon: <Assessment />, path: "/reports", roles: ["owner"] },
     { text: "الإعدادات", icon: <Settings />, path: "/settings", roles: ["owner"] },
-    { text: "صلحيات المستخدمين", icon: <PersonAddAltIcon />, path: "/permissions", roles: ["owner"] },
+    { text: "صلاحيات المستخدمين", icon: <PersonAddAltIcon />, path: "/permissions", roles: ["owner"] },
   ];
 
   return (

@@ -1,20 +1,35 @@
-import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { mockLogin } from "../services/authService";
+
+// استيراد مكونات MUI
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Container,
+  Paper,
+  Alert,
+  CircularProgress,
+  Avatar,
+  IconButton,
+  InputAdornment,
+} from "@mui/material";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // لإظهار/إخفاء كلمة المرور
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const { login } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-
-  // تحديد المكان الذي كان يحاول المستخدم الوصول إليه قبل تحويله لصفحة الدخول
-  const from = location.state?.from?.pathname || "/";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,8 +39,6 @@ export default function Login() {
     try {
       // استدعاء دالة الـ Mock التي تبحث في ملف الـ JSON
       const userData = await mockLogin(username, password);
-      console.log("Login successful:", userData);
-      // تحديث الـ Context
       login(userData);
 
       // التوجيه بناءً على الصلاحية أو للمكان الذي أراده المستخدم
@@ -42,58 +55,118 @@ export default function Login() {
   };
 
   return (
-    <div className="login-container">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <h2>تسجيل الدخول</h2>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        bgcolor: "#f0f2f5", // نفس لون الخلفية الأصلي
+      }}
+    >
+      <Container maxWidth="xs">
+        <Paper
+          elevation={4}
+          sx={{
+            p: 4,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            borderRadius: 3,
+          }}
+        >
+          {/* أيقونة القفل في الأعلى */}
+          <Avatar sx={{ m: 1, bgcolor: "primary.main", width: 56, height: 56 }}>
+            <LockOutlinedIcon fontSize="large" />
+          </Avatar>
 
-        {error && <div className="error-message">{error}</div>}
+          <Typography component="h1" variant="h5" sx={{ mb: 3, fontWeight: "bold" }}>
+            تسجيل الدخول
+          </Typography>
 
-        <div className="input-group">
-          <label>اسم المستخدم</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="ادخل اسم المستخدم (admin أو seller)"
-            required
-          />
-        </div>
+          {/* عرض الخطأ إن وجد */}
+          {error && (
+            <Alert severity="error" sx={{ width: "100%", mb: 2 }}>
+              {error}
+            </Alert>
+          )}
 
-        <div className="input-group">
-          <label>كلمة المرور</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="كلمة المرور (123)"
-            required
-          />
-        </div>
+          <Box component="form" onSubmit={handleSubmit} sx={{ width: "100%" }}>
+            <TextField
+              fullWidth
+              label="اسم المستخدم"
+              margin="normal"
+              required
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="admin أو seller"
+              autoFocus
+            />
 
-        <button type="submit" disabled={loading}>
-          {loading ? "جاري التحقق..." : "دخول"}
-        </button>
+            <TextField
+              fullWidth
+              label="كلمة المرور"
+              margin="normal"
+              required
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="123"
+              // إضافة زر إظهار وإخفاء كلمة المرور
+              slotProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
 
-        <div className="hint-box">
-          <p>تلميح للتجربة:</p>
-          <p>المالك: admin / 123</p>
-          <p>البائع: seller / 123</p>
-        </div>
-      </form>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              disabled={loading}
+              sx={{
+                mt: 3,
+                mb: 2,
+                py: 1.5,
+                fontSize: "1rem",
+                fontWeight: "bold",
+                borderRadius: 2,
+              }}
+            >
+              {loading ? <CircularProgress size={24} color="inherit" /> : "دخول"}
+            </Button>
 
-      {/* تنسيق CSS بسيط مدمج للتوضيح */}
-      <style>{`
-        .login-container { display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f2f5; font-family: sans-serif; direction: rtl; }
-        .login-form { background: white; padding: 2rem; border-radius: 8px; shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
-        h2 { text-align: center; color: #333; margin-bottom: 1.5rem; }
-        .input-group { margin-bottom: 1rem; }
-        label { display: block; margin-bottom: 0.5rem; color: #666; }
-        input { width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 0.8rem; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; }
-        button:disabled { background: #ccc; }
-        .error-message { background: #fee2e2; color: #dc2626; padding: 0.7rem; border-radius: 4px; margin-bottom: 1rem; text-align: center; }
-        .hint-box { margin-top: 1.5rem; font-size: 0.8rem; color: #888; background: #f9f9f9; padding: 0.5rem; border: 1px dashed #ddd; }
-      `}</style>
-    </div>
+            {/* صندوق التلميحات (Hint Box) */}
+            <Box
+              sx={{
+                mt: 2,
+                p: 2,
+                bgcolor: "action.hover",
+                borderRadius: 2,
+                border: "1px dashed",
+                borderColor: "divider",
+                textAlign: "left",
+                direction: "ltr",
+              }}
+            >
+              <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                تلميح للتجربة:
+              </Typography>
+              <Typography variant="caption" color="text.secondary" display="block">
+                • المالك: <strong>admin</strong> / 123
+              </Typography>
+              <Typography variant="caption" color="text.secondary" display="block">
+                • البائع: <strong>seller</strong> / 123
+              </Typography>
+            </Box>
+          </Box>
+        </Paper>
+      </Container>
+    </Box>
   );
 }
