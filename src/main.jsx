@@ -10,8 +10,7 @@ import { prefixer } from "stylis";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import { UserProvider } from "./contexts/UserContext.jsx";
-import { ProductProvider } from "./contexts/ProductContext.jsx";
-
+import ProductProvider from "./contexts/ProductContext.jsx";
 // 1. إنشاء Cache يدعم الـ RTL
 const cacheRtl = createCache({
   key: "muirtl",

@@ -19,11 +19,156 @@
   },
   {
     "id": 3,
-    "name": "سماعة Apple Airpods",
+    "name": "سماعة Apple Airpods Pro 2",
     "brand": "Apple",
     "category": "إكسسوارات",
-    "price": 8500,
+    "price": 11500,
     "stock": 15,
+    "minStock": 5
+  },
+  {
+    "id": 4,
+    "name": "Xiaomi 13 Ultra",
+    "brand": "Xiaomi",
+    "category": "موبايلات",
+    "price": 42000,
+    "stock": 4,
+    "minStock": 2
+  },
+  {
+    "id": 5,
+    "name": "Google Pixel 8 Pro",
+    "brand": "Google",
+    "category": "موبايلات",
+    "price": 48000,
+    "stock": 6,
+    "minStock": 3
+  },
+  {
+    "id": 6,
+    "name": "Apple Watch Series 9",
+    "brand": "Apple",
+    "category": "ساعات ذكية",
+    "price": 22000,
+    "stock": 8,
+    "minStock": 4
+  },
+  {
+    "id": 7,
+    "name": "Galaxy Watch 6 Classic",
+    "brand": "Samsung",
+    "category": "ساعات ذكية",
+    "price": 14000,
+    "stock": 1,
+    "minStock": 3
+  },
+  {
+    "id": 8,
+    "name": "شاحن Samsung 25W",
+    "brand": "Samsung",
+    "category": "إكسسوارات",
+    "price": 850,
+    "stock": 50,
+    "minStock": 10
+  },
+  {
+    "id": 9,
+    "name": "Realme 11 Pro+",
+    "brand": "Realme",
+    "category": "موبايلات",
+    "price": 18500,
+    "stock": 12,
+    "minStock": 5
+  },
+  {
+    "id": 10,
+    "name": "Oppo Reno 10 Pro",
+    "brand": "Oppo",
+    "category": "موبايلات",
+    "price": 21000,
+    "stock": 0,
+    "minStock": 2
+  },
+  {
+    "id": 11,
+    "name": "Huawei Mate 60 Pro",
+    "brand": "Huawei",
+    "category": "موبايلات",
+    "price": 55000,
+    "stock": 3,
+    "minStock": 2
+  },
+  {
+    "id": 12,
+    "name": "سماعة Sony WH-1000XM5",
+    "brand": "Sony",
+    "category": "إكسسوارات",
+    "price": 19500,
+    "stock": 7,
+    "minStock": 2
+  },
+  { "id": 13, "name": "iPad Air M2", "brand": "Apple", "category": "تابلت", "price": 38000, "stock": 5, "minStock": 2 },
+  {
+    "id": 14,
+    "name": "Galaxy Tab S9 Plus",
+    "brand": "Samsung",
+    "category": "تابلت",
+    "price": 34000,
+    "stock": 4,
+    "minStock": 2
+  },
+  {
+    "id": 15,
+    "name": "كابل iPhone Original",
+    "brand": "Apple",
+    "category": "إكسسوارات",
+    "price": 1200,
+    "stock": 100,
+    "minStock": 20
+  },
+  {
+    "id": 16,
+    "name": "OnePlus 11",
+    "brand": "OnePlus",
+    "category": "موبايلات",
+    "price": 32000,
+    "stock": 9,
+    "minStock": 3
+  },
+  {
+    "id": 17,
+    "name": "ساعة Xiaomi Watch S1",
+    "brand": "Xiaomi",
+    "category": "ساعات ذكية",
+    "price": 6500,
+    "stock": 20,
+    "minStock": 5
+  },
+  {
+    "id": 18,
+    "name": "Nothing Phone (2)",
+    "brand": "Nothing",
+    "category": "موبايلات",
+    "price": 28000,
+    "stock": 5,
+    "minStock": 2
+  },
+  {
+    "id": 19,
+    "name": "جراب MagSafe iPhone 15",
+    "brand": "Apple",
+    "category": "إكسسوارات",
+    "price": 2500,
+    "stock": 30,
+    "minStock": 10
+  },
+  {
+    "id": 20,
+    "name": "Redmi Note 12",
+    "brand": "Xiaomi",
+    "category": "موبايلات",
+    "price": 9500,
+    "stock": 18,
     "minStock": 10
   }
 ]
