@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "name": "iPhone 15 Pro",
+    "brand": "Apple",
+    "category": "موبايلات",
+    "price": 65000,
+    "stock": 10,
+    "minStock": 3
+  },
+  {
+    "id": 2,
+    "name": "Galaxy S23 Ultra",
+    "brand": "Samsung",
+    "category": "موبايلات",
+    "price": 52000,
+    "stock": 2,
+    "minStock": 5
+  },
+  {
+    "id": 3,
+    "name": "سماعة Apple Airpods",
+    "brand": "Apple",
+    "category": "إكسسوارات",
+    "price": 8500,
+    "stock": 15,
+    "minStock": 10
+  }
+]

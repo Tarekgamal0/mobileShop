@@ -25,23 +25,28 @@ export const UserProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+    if (!loading) {
+      localStorage.setItem("app_users", JSON.stringify(users));
+    }
+  }, [users, loading]);
+
   // دالة البحث: تعيد قائمة الموظفين المفلترة بناءً على الاسم أو اسم المستخدم
   const filteredUsers = users.filter(
     (user) =>
       user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.username.toLowerCase().includes(searchQuery.toLowerCase())
+      user.username.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  // دالة حذف مستخدم
-  const getUserById = (id) => {
-    return users.find((user) => user.id === Number(id));
-  };
+  // const getUserById = (id) => {
+  //   return users.find((user) => user.id === Number(id));
+  // };
 
   // دالة حذف مستخدم
   const deleteUser = (id) => {
     const updated = users.filter((user) => user.id !== id);
     setUsers(updated);
-    localStorage.setItem("app_users", JSON.stringify(updated));
+    // localStorage.setItem("app_users", JSON.stringify(updated));
   };
 
   // دالة إضافة مستخدم جديد
@@ -49,14 +54,14 @@ export const UserProvider = ({ children }) => {
     const userWithId = { ...newUser, id: Date.now() }; // توليد ID مؤقت
     const updated = [...users, userWithId];
     setUsers(updated);
-    localStorage.setItem("app_users", JSON.stringify(updated));
+    // localStorage.setItem("app_users", JSON.stringify(updated));
   };
 
   // دالة تحديث صلاحية (Role)
   const updateUserRole = (id, newRole) => {
     const updated = users.map((u) => (u.id === id ? { ...u, role: newRole } : u));
     setUsers(updated);
-    localStorage.setItem("app_users", JSON.stringify(updated));
+    // localStorage.setItem("app_users", JSON.stringify(updated));
   };
 
   return (
