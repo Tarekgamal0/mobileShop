@@ -1,12 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { useUsers } from "./UserContext";
 
 const AuthContext = createContext({});
 
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  
+
   // عند تحميل التطبيق، نتحقق هل المستخدم مسجل دخول سابقاً؟
   useEffect(() => {
     // const savedUser = localStorage.getItem("user");

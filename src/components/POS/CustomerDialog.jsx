@@ -52,12 +52,6 @@ export default function CustomerDialog({
               }
             }}
             variant="outlined"
-            slotProps={{
-              htmlInput: {
-                maxLength: 11, // حماية إضافية من المتصفح
-                inputMode: "numeric", // ضمان ظهور الأرقام فقط في الأجهزة الذكية
-              },
-            }}
             helperText={`${customerPhone.length}/11`} // اختياري: لإظهار عداد للأرقام
             // error={customerPhone.length > 0 && customerPhone.length < 11} // اختياري: إظهار لون أحمر إذا كان الرقم ناقصاً
           />

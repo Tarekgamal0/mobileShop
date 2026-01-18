@@ -7,6 +7,7 @@ import { useProducts } from "../../contexts/ProductContext";
 import ProductList from "../../components/POS/ProductList";
 import CartSidebar from "../../components/POS/CartSidebar";
 import CustomerDialog from "../../components/POS/CustomerDialog";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function POS() {
   const { products, adjustStock, confirmSale } = useProducts();
@@ -18,6 +19,8 @@ export default function POS() {
   const [openCheckoutDialog, setOpenCheckoutDialog] = useState(false);
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
+
+  const { user } = useAuth();
 
   // إضافة منتج للسلة
   const addToCart = (product) => {
@@ -63,24 +66,43 @@ export default function POS() {
 
   // 4. إتمام البيع
   const handleFinalCheckout = () => {
+    // تحضير بيانات العملية الحالية
     const saleData = {
+      id: Date.now(), // إضافة ID فريد لكل عملية
       items: cart,
       total: totalPrice,
       paymentMethod: paymentMethod,
       date: new Date().toLocaleString(),
+      seller: user.name || "بائع غير معروف",
       customer: {
         name: customerName || "عميل نقدي", // اسم افتراضي إذا لم يدخل اسم
         phone: customerPhone || "غير مسجل",
       },
     };
 
+    // --- إضافة البيانات إلى LocalStorage ---
+    try {
+      //  جلب العمليات السابقة من localStorage (أو إنشاء مصفوفة فارغة إذا كانت أول مرة)
+      const existingTransactions = JSON.parse(localStorage.getItem("app-transactions")) || [];
+
+      //  إضافة العملية الجديدة للمصفوفة
+      const updatedTransactions = [saleData, ...existingTransactions];
+
+      // 4 حفظ المصفوفة المحدثة في localStorage
+      localStorage.setItem("app-transactions", JSON.stringify(updatedTransactions));
+    } catch (error) {
+      console.error("خطأ في حفظ البيانات في localStorage:", error);
+    }
+    // ----------------------------------------
+
+    // إرسال البيانات للـ Context (إذا كنت لا تزال تستخدمه)
     confirmSale(saleData);
     setCart([]);
     setPaymentMethod("cash");
     setCustomerName("");
     setCustomerPhone("");
     setOpenCheckoutDialog(false);
-    alert(`تمت العملية بنجاح - الدفع: ${paymentMethod === "cash" ? "نقدي" : "فيزا"}`);
+    alert(`تمت العملية بنجاح وحفظها في السجلات!`);
   };
 
   // حساب الإجمالي الكلي وعدد القطع
