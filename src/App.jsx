@@ -18,6 +18,8 @@ import POS from "./routes/seller/POS";
 import ServiceRepair from "./routes/seller/ServiceRepair";
 
 import MainLayout from "./components/MainLayout";
+import Dashboard from "./routes/owner/Dashboard";
+import Transactions from "./routes/seller/Transactions";
 
 const theme = createTheme({
   palette: {
@@ -57,12 +59,14 @@ function App() {
               <Route path="/repair" element={<ServiceRepair />} />
               <Route path="/inventory" element={<Inventory />} />
               <Route path="/customers" element={<Customers />} />
+              <Route path="/transactions" element={<Transactions />} />
             </Route>
           </Route>
 
           {/* 3. مسارات المالك فقط - داخل نفس الـ Layout */}
           <Route element={<ProtectedRoute allowedRoles={["owner"]} />}>
             <Route element={<MainLayout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/inventory-manage" element={<InventoryMangement />} />
               <Route path="/reports" element={<Reports />} />
               <Route path="/settings" element={<Settings />} />

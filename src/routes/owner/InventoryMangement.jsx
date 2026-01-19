@@ -128,20 +128,9 @@ export default function InventoryMangement() {
   return (
     <Box sx={{ p: 3, direction: "ltr" }}>
       {/* Header Section */}
-      <Paper
-        sx={{ p: 2, mb: 2, display: "flex", justifyContent: "space-between", alignItems: "center", borderRadius: 2 }}
-      >
-        <Typography variant="h5" fontWeight="bold">
-          المخزون الحالي
-        </Typography>
-        <IconButton
-          color="primary"
-          sx={{ bgcolor: "primary.main", color: "white", "&:hover": { bgcolor: "primary.dark" } }}
-          onClick={() => setOpenAdd(true)}
-        >
-          <AddCircleIcon />
-        </IconButton>
-      </Paper>
+      <Typography variant="h4" sx={{ mb: 3, fontWeight: "bold", direction: "ltr", color: "primary.main" }}>
+        ادارة المخزون الحالي
+      </Typography>
 
       {/* DataGrid Section */}
       <Paper sx={{ height: 650, width: "100%", borderRadius: 2, overflow: "hidden" }}>

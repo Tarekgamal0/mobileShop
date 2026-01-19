@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Grid, Paper, TextField, InputAdornment } from "@mui/material";
+import { Box, Grid, Paper, TextField, InputAdornment, Typography } from "@mui/material";
 
 import SearchIcon from "@mui/icons-material/Search";
 import { useProducts } from "../../contexts/ProductContext";
@@ -8,6 +8,8 @@ import ProductList from "../../components/POS/ProductList";
 import CartSidebar from "../../components/POS/CartSidebar";
 import CustomerDialog from "../../components/POS/CustomerDialog";
 import { useAuth } from "../../contexts/AuthContext";
+import SearchField from "../../components/shared/SearchField";
+import { useTransactions } from "../../contexts/TransactionsContext";
 
 export default function POS() {
   const { products, adjustStock, confirmSale } = useProducts();
@@ -21,6 +23,7 @@ export default function POS() {
   const [customerPhone, setCustomerPhone] = useState("");
 
   const { user } = useAuth();
+  const { addTransaction } = useTransactions(); // جلب وظيفة الإضافة
 
   // إضافة منتج للسلة
   const addToCart = (product) => {
@@ -80,29 +83,19 @@ export default function POS() {
       },
     };
 
-    // --- إضافة البيانات إلى LocalStorage ---
-    try {
-      //  جلب العمليات السابقة من localStorage (أو إنشاء مصفوفة فارغة إذا كانت أول مرة)
-      const existingTransactions = JSON.parse(localStorage.getItem("app-transactions")) || [];
-
-      //  إضافة العملية الجديدة للمصفوفة
-      const updatedTransactions = [saleData, ...existingTransactions];
-
-      // 4 حفظ المصفوفة المحدثة في localStorage
-      localStorage.setItem("app-transactions", JSON.stringify(updatedTransactions));
-    } catch (error) {
-      console.error("خطأ في حفظ البيانات في localStorage:", error);
-    }
-    // ----------------------------------------
+    // استخدام الـ Context للحفظ
+    const success = addTransaction(saleData);
 
     // إرسال البيانات للـ Context (إذا كنت لا تزال تستخدمه)
-    confirmSale(saleData);
-    setCart([]);
-    setPaymentMethod("cash");
-    setCustomerName("");
-    setCustomerPhone("");
-    setOpenCheckoutDialog(false);
-    alert(`تمت العملية بنجاح وحفظها في السجلات!`);
+    if (success) {
+      confirmSale(saleData);
+      setCart([]);
+      setPaymentMethod("cash");
+      setCustomerName("");
+      setCustomerPhone("");
+      setOpenCheckoutDialog(false);
+      alert(`تمت العملية بنجاح وحفظها في السجلات!`);
+    }
   };
 
   // حساب الإجمالي الكلي وعدد القطع
@@ -111,23 +104,14 @@ export default function POS() {
 
   return (
     <Box sx={{ p: 3, direction: "ltr" }}>
-      <Paper sx={{ p: 2, mb: 2, borderRadius: 2 }}>
-        <TextField
-          fullWidth
-          variant="outlined"
-          placeholder="ابحث عن موديل أو ماركة..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          slotProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon color="action" />
-              </InputAdornment>
-            ),
-          }}
-          sx={{ bgcolor: "#fbfbfb" }}
-        />
-      </Paper>
+      <Typography variant="h4" sx={{ mb: 3, fontWeight: "bold", direction: "ltr", color: "primary.main" }}>
+        نقطة البيع
+      </Typography>
+      <SearchField
+        placeholder="ابحث عن موديل أو ماركة..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
       <Grid container spacing={3}>
         {/* قائمة المنتجات */}
         <Grid size={{ xs: 12, md: 8 }}>

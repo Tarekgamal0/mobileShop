@@ -12,9 +12,18 @@ import {
   Box,
   Typography,
 } from "@mui/material";
-import { Dashboard, Inventory, PointOfSale, Build, People, Assessment, Settings, Logout } from "@mui/icons-material";
+import {
+  Dashboard,
+  Inventory,
+  PointOfSale,
+  Build,
+  People,
+  Assessment,
+  Settings,
+  Logout,
+  Paid,
+} from "@mui/icons-material";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
-import BuildIcon from "@mui/icons-material/Build";
 
 const drawerWidth = 240;
 
@@ -27,10 +36,12 @@ export default function Sidebar() {
   const menuItems = [
     // { text: "لوحة التحكم", icon: <Dashboard />, path: "/dashboard", roles: ["owner"] },
     { text: "نقطة البيع", icon: <PointOfSale />, path: "/pos", roles: ["owner", "seller"] },
+    { text: "العمليات", icon: <Paid />, path: "/transactions", roles: ["owner", "seller"] },
+    { text: "لوحة التحكم", icon: <Dashboard />, path: "/dashboard", roles: ["owner"] },
     { text: "المخزن", icon: <Inventory />, path: "/inventory", roles: ["owner", "seller"] },
     { text: "إدارة المخزن", icon: <Inventory />, path: "/inventory-manage", roles: ["owner"] },
     { text: "الصيانة", icon: <Build />, path: "/repair", roles: ["owner", "seller"] },
-    { text: "العملاء", icon: <People />, path: "/customers", roles: ["owner", "seller"] },
+    { text: "سجل العملاء", icon: <People />, path: "/customers", roles: ["owner", "seller"] },
     { text: "الموظفين", icon: <People />, path: "/staff", roles: ["owner"] },
     { text: "التقارير", icon: <Assessment />, path: "/reports", roles: ["owner"] },
     { text: "الإعدادات", icon: <Settings />, path: "/settings", roles: ["owner"] },
@@ -76,7 +87,7 @@ export default function Sidebar() {
                   <ListItemText primary={item.text} sx={{ textAlign: "left" }} />
                 </ListItemButton>
               </ListItem>
-            )
+            ),
         )}
       </List>
 

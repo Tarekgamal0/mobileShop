@@ -11,6 +11,7 @@ import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import { UserProvider } from "./contexts/UserContext.jsx";
 import ProductProvider from "./contexts/ProductContext.jsx";
+import { TransactionsProvider } from "./contexts/TransactionsContext.jsx";
 // 1. إنشاء Cache يدعم الـ RTL
 const cacheRtl = createCache({
   key: "muirtl",
@@ -27,7 +28,9 @@ createRoot(document.getElementById("root")).render(
         <AuthProvider>
           <UserProvider>
             <ProductProvider>
-              <App />
+              <TransactionsProvider>
+                <App />
+              </TransactionsProvider>
             </ProductProvider>
           </UserProvider>
         </AuthProvider>
