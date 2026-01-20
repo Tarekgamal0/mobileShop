@@ -15,6 +15,7 @@ import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import { Radio, RadioGroup, FormControlLabel, FormControl, FormLabel } from "@mui/material";
 import CashIcon from "@mui/icons-material/Payments";
 import VisaIcon from "@mui/icons-material/CreditCard";
+import TransferIcon from "@mui/icons-material/AccountBalance"; // أيقونة التحويل البنكي
 
 export default function CartSidebar({
   cart,
@@ -90,7 +91,6 @@ export default function CartSidebar({
                     </Stack>
                   }
                 />
-
                 {/* خيار الفيزا */}
                 <FormControlLabel
                   value="visa"
@@ -99,6 +99,17 @@ export default function CartSidebar({
                     <Stack direction="row" alignItems="center" spacing={1}>
                       <VisaIcon sx={{ color: paymentMethod === "visa" ? "primary.main" : "action.active" }} />
                       <Typography variant="body2">فيزا</Typography>
+                    </Stack>
+                  }
+                />
+                {/* خيار التحويل */}
+                <FormControlLabel
+                  value="transfer"
+                  control={<Radio size="small" />}
+                  label={
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                      <TransferIcon sx={{ color: paymentMethod === "transfer" ? "primary.main" : "action.active" }} />
+                      <Typography variant="body2">تحويل</Typography>
                     </Stack>
                   }
                 />

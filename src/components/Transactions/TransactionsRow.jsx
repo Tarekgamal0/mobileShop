@@ -15,6 +15,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import CashIcon from "@mui/icons-material/Payments";
 import VisaIcon from "@mui/icons-material/CreditCard";
+import TransferIcon from "@mui/icons-material/AccountBalance";
 
 export default function TransactionRow({ transaction }) {
   const [open, setOpen] = useState(false);
@@ -32,9 +33,25 @@ export default function TransactionRow({ transaction }) {
         <TableCell>{transaction.customer?.name}</TableCell>
         <TableCell>
           <Chip
-            icon={transaction.paymentMethod === "cash" ? <CashIcon /> : <VisaIcon />}
-            label={transaction.paymentMethod === "cash" ? "كاش" : "فيزا"}
-            color={transaction.paymentMethod === "cash" ? "success" : "primary"}
+            icon={
+              transaction.paymentMethod === "cash" ? (
+                <CashIcon />
+              ) : transaction.paymentMethod === "visa" ? (
+                <VisaIcon />
+              ) : (
+                <TransferIcon />
+              )
+            }
+            label={
+              transaction.paymentMethod === "cash" ? "كاش" : transaction.paymentMethod === "visa" ? "فيزا" : "تحويل"
+            }
+            color={
+              transaction.paymentMethod === "cash"
+                ? "success"
+                : transaction.paymentMethod === "visa"
+                  ? "primary"
+                  : "secondary" // لون مختلف للتحويل (مثلاً البنفسجي)
+            }
             variant="outlined"
             size="small"
           />
