@@ -12,7 +12,7 @@ export default function Transactions() {
   // فلترة العمليات بناءً على اسم العميل، البائع، أو التاريخ
   const filteredTransactions = transactions.filter(
     (t) =>
-      t.invoiceNumber?.toString().includes(searchTerm) ||
+      t.invoiceNumber.toString().includes(searchTerm) ||
       t.customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       t.seller.toLowerCase().includes(searchTerm.toLowerCase()) ||
       t.date.includes(searchTerm),
