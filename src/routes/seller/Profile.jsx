@@ -105,8 +105,21 @@ export default function Profile() {
       </Grid>
 
       {/* تنبيه لنجاح أو فشل العملية */}
-      <Snackbar open={message.open} autoHideDuration={4000} onClose={() => setMessage({ ...message, open: false })}>
-        <Alert severity={message.type} sx={{ width: "100%" }}>
+      <Snackbar
+        open={message.open}
+        autoHideDuration={4000}
+        onClose={() => setMessage({ ...message, open: false })}
+        // 1. تحديد مكان الظهور (أعلى المنتصف ليكون واضحاً جداً)
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        // 2. رفع مستوى الطبقة لضمان ظهورها فوق كل شيء
+        sx={{ zIndex: 9999 }}
+      >
+        <Alert
+          onClose={() => setMessage({ ...message, open: false })} // إضافة زر إغلاق داخل التنبيه
+          severity={message.type}
+          variant="filled" // تجعل اللون قوياً وواضحاً
+          sx={{ width: "100%", boxShadow: 3 }}
+        >
           {message.text}
         </Alert>
       </Snackbar>
