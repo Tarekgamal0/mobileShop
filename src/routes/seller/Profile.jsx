@@ -44,7 +44,7 @@ export default function Profile() {
       </Typography>
 
       <Grid container spacing={4}>
-        <Grid item xs={12} md={5}>
+        <Grid size={{ xs: 12, md: 5 }}>
           <Paper sx={{ p: 3, textAlign: "center", borderRadius: 2 }}>
             <Avatar sx={{ width: 100, height: 100, mx: "auto", mb: 2, bgcolor: "primary.main" }}>
               {user?.name?.charAt(0).toUpperCase() || "U"}
@@ -62,7 +62,7 @@ export default function Profile() {
           </Paper>
         </Grid>
 
-        <Grid item xs={12} md={7}>
+        <Grid size={{ xs: 12, md: 7 }}>
           <Paper sx={{ p: 3, borderRadius: 2 }}>
             <Typography variant="h6" sx={{ mb: 3 }}>
               {" "}
