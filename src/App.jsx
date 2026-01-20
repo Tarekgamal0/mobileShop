@@ -22,6 +22,7 @@ import Dashboard from "./routes/owner/Dashboard";
 import Transactions from "./routes/seller/Transactions";
 import TransactionsMangement from "./routes/owner/TransactionsMangement";
 import ReturnsHistory from "./routes/seller/ReturnsHistory";
+import Profile from "./routes/seller/Profile";
 
 const theme = createTheme({
   palette: {
@@ -63,6 +64,7 @@ function App() {
               <Route path="/customers" element={<Customers />} />
               <Route path="/transactions" element={<Transactions />} />
               <Route path="/returns" element={<ReturnsHistory />} />
+              <Route path="/profile" element={<Profile />} />
             </Route>
           </Route>
 

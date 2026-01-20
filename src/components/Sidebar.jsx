@@ -22,6 +22,7 @@ import {
   Settings,
   Logout,
   Paid,
+  AccountCircle,
 } from "@mui/icons-material";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 
@@ -94,6 +95,26 @@ export default function Sidebar() {
 
       <Box sx={{ marginTop: "auto", pb: 2 }}>
         <Divider sx={{ bgcolor: "gray" }} />
+        
+        {/* زر الملف الشخصي الجديد */}
+        <ListItemButton
+          onClick={() => navigate("/profile")}
+          selected={location.pathname === "/profile"}
+          sx={{
+            color: "white",
+            flexDirection: "row-reverse",
+            gap: 1.5,
+            "&.Mui-selected": { bgcolor: "#334155" },
+            "&:hover": { bgcolor: "#334155" },
+          }}
+        >
+          <ListItemIcon sx={{ color: "white" }}>
+            <AccountCircle />
+          </ListItemIcon>
+          <ListItemText primary="الملف الشخصي" sx={{ textAlign: "left" }} />
+        </ListItemButton>
+
+        {/* زر تسجيل الخروج */}
         <ListItemButton onClick={logout} sx={{ color: "#fb7185", flexDirection: "row-reverse", gap: 1.5 }}>
           <ListItemIcon sx={{ color: "#fb7185" }}>
             <Logout />

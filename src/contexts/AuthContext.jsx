@@ -26,7 +26,31 @@ export default function AuthProvider({ children }) {
     localStorage.removeItem("current_user");
   };
 
-  return <AuthContext.Provider value={{ user, loading, login, logout }}>{children}</AuthContext.Provider>;
+  const updatePassword = (allUsers, currentPassword, newPassword) => {
+    // const allUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+    console.log(user);
+
+    if (user.password !== currentPassword) {
+      return { success: false, message: "كلمة المرور الحالية غير صحيحة" };
+    }
+
+    const updatedUsers = allUsers.map((u) => {
+      if (u.username === user.username) return { ...u, password: newPassword };
+      return u;
+    });
+
+    localStorage.setItem("app_users", JSON.stringify(updatedUsers));
+
+    const updatedUser = { ...user, password: newPassword };
+    setUser(updatedUser);
+    localStorage.setItem("current_user", JSON.stringify(updatedUser));
+
+    return { success: true, message: "تم تحديث كلمة المرور بنجاح" };
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, loading, login, logout, updatePassword }}>{children}</AuthContext.Provider>
+  );
 }
 
 export const useAuth = () => {

@@ -21,8 +21,8 @@ export const mockLogin = (username, password) => {
 
       if (user) {
         // نرسل البيانات بدون كلمة المرور للأمان
-        const { password: _, ...userData } = user;
-        resolve(userData);
+        // const { password: _, ...userData } = user;
+        resolve(user);
       } else {
         // تأكد من إرجاع رسالة خطأ واضحة
         reject(new Error("اسم المستخدم أو كلمة المرور غير صحيحة"));
