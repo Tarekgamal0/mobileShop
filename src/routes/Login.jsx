@@ -43,7 +43,7 @@ export default function Login() {
 
       // التوجيه بناءً على الصلاحية أو للمكان الذي أراده المستخدم
       if (userData.role === "owner") {
-        navigate("/inventory-manage");
+        navigate("/dashboard");
       } else {
         navigate("/pos");
       }

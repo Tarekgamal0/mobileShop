@@ -34,12 +34,11 @@ export default function Sidebar() {
 
   // مصفوفة الروابط مع تحديد الأدوار
   const menuItems = [
-    // { text: "لوحة التحكم", icon: <Dashboard />, path: "/dashboard", roles: ["owner"] },
+    { text: "لوحة التحكم", icon: <Dashboard />, path: "/dashboard", roles: ["owner"] },
     { text: "نقطة البيع", icon: <PointOfSale />, path: "/pos", roles: ["owner", "seller"] },
     // { text: "العمليات", icon: <Paid />, path: "/transactions-manage", roles: ["owner"] },
     { text: "العمليات", icon: <Paid />, path: "/transactions", roles: ["owner", "seller"] },
     { text: "المرتجع", icon: <Inventory />, path: "/returns", roles: ["owner", "seller"] },
-    { text: "لوحة التحكم", icon: <Dashboard />, path: "/dashboard", roles: ["owner"] },
     { text: "المخزن", icon: <Inventory />, path: "/inventory", roles: ["seller"] },
     { text: "المخزن", icon: <Inventory />, path: "/inventory-manage", roles: ["owner"] },
     // { text: "الصيانة", icon: <Build />, path: "/repair", roles: ["owner", "seller"] },
