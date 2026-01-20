@@ -8,6 +8,7 @@ export default function TransactionTable({ data }) {
         <TableHead sx={{ bgcolor: "#f5f5f5" }}>
           <TableRow>
             <TableCell width="50px" />
+            <TableCell sx={{ fontWeight: "bold" }}>رقم الفاتورة</TableCell>
             <TableCell>التاريخ</TableCell>
             <TableCell>البائع</TableCell>
             <TableCell>العميل</TableCell>
@@ -20,7 +21,7 @@ export default function TransactionTable({ data }) {
             data.map((transaction) => <TransactionRow key={transaction.id} transaction={transaction} />)
           ) : (
             <TableRow>
-              <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
+              <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
                 لا توجد سجلات مطابقة للبحث
               </TableCell>
             </TableRow>

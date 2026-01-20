@@ -12,6 +12,7 @@ export default function Transactions() {
   // فلترة العمليات بناءً على اسم العميل، البائع، أو التاريخ
   const filteredTransactions = transactions.filter(
     (t) =>
+      t.invoiceNumber?.toString().includes(searchTerm) ||
       t.customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       t.seller.toLowerCase().includes(searchTerm.toLowerCase()) ||
       t.date.includes(searchTerm),
@@ -24,7 +25,7 @@ export default function Transactions() {
       </Typography>
 
       <SearchField
-        placeholder="ابحث باسم العميل، البائع، أو التاريخ..."
+        placeholder="ابحث برقم الفاتورة، اسم العميل، البائع، أو التاريخ..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />

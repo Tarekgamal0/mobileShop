@@ -28,6 +28,11 @@ export default function TransactionRow({ transaction }) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
+        <TableCell>
+          <Typography variant="body2" sx={{ fontWeight: "bold", color: "primary.main" }}>
+            #{transaction.invoiceNumber || "---"}
+          </Typography>
+        </TableCell>
         <TableCell>{transaction.date}</TableCell>
         <TableCell sx={{ fontWeight: "bold" }}>{transaction.seller}</TableCell>
         <TableCell>{transaction.customer?.name}</TableCell>

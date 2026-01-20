@@ -12,15 +12,27 @@ export const TransactionsProvider = ({ children }) => {
   }, []);
 
   // 2. وظيفة لإضافة عملية بيع جديدة
-  const addTransaction = (newSale) => {
+  const addTransaction = (saleData) => {
     try {
-      // تحديث الحالة (State)
-      setTransactions((prev) => {
-        const updated = [newSale, ...prev];
-        // حفظ في LocalStorage
-        localStorage.setItem("app-transactions", JSON.stringify(updated));
-        return updated;
-      });
+      const existingTransactions = JSON.parse(localStorage.getItem("app-transactions") || "[]");
+
+      // حساب رقم الفاتورة:
+      // نأخذ أكبر رقم فاتورة موجود ونضيف عليه 1، وإذا لم يوجد نبدأ من 1000
+      const maxInvoiceNum = existingTransactions.reduce(
+        (max, t) => (t.invoiceNumber > max ? t.invoiceNumber : max),
+        1000,
+      );
+
+      const finalSaleObject = {
+        ...saleData,
+        invoiceNumber: maxInvoiceNum + 1, // زيادة الرقم بمقدار 1
+      };
+
+      const updatedTransactions = [finalSaleObject, ...existingTransactions];
+
+      setTransactions(updatedTransactions);
+      localStorage.setItem("app-transactions", JSON.stringify(updatedTransactions));
+
       return true;
     } catch (error) {
       console.error("Error saving transaction:", error);
