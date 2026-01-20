@@ -36,15 +36,17 @@ export default function Sidebar() {
   const menuItems = [
     // { text: "لوحة التحكم", icon: <Dashboard />, path: "/dashboard", roles: ["owner"] },
     { text: "نقطة البيع", icon: <PointOfSale />, path: "/pos", roles: ["owner", "seller"] },
+    // { text: "العمليات", icon: <Paid />, path: "/transactions-manage", roles: ["owner"] },
     { text: "العمليات", icon: <Paid />, path: "/transactions", roles: ["owner", "seller"] },
+    { text: "المرتجع", icon: <Inventory />, path: "/returns", roles: ["owner", "seller"] },
     { text: "لوحة التحكم", icon: <Dashboard />, path: "/dashboard", roles: ["owner"] },
-    { text: "المخزن", icon: <Inventory />, path: "/inventory", roles: ["owner", "seller"] },
-    { text: "إدارة المخزن", icon: <Inventory />, path: "/inventory-manage", roles: ["owner"] },
-    { text: "الصيانة", icon: <Build />, path: "/repair", roles: ["owner", "seller"] },
+    { text: "المخزن", icon: <Inventory />, path: "/inventory", roles: ["seller"] },
+    { text: "المخزن", icon: <Inventory />, path: "/inventory-manage", roles: ["owner"] },
+    // { text: "الصيانة", icon: <Build />, path: "/repair", roles: ["owner", "seller"] },
     { text: "سجل العملاء", icon: <People />, path: "/customers", roles: ["owner", "seller"] },
-    { text: "الموظفين", icon: <People />, path: "/staff", roles: ["owner"] },
+    // { text: "الموظفين", icon: <People />, path: "/staff", roles: ["owner"] },
     { text: "التقارير", icon: <Assessment />, path: "/reports", roles: ["owner"] },
-    { text: "الإعدادات", icon: <Settings />, path: "/settings", roles: ["owner"] },
+    // { text: "الإعدادات", icon: <Settings />, path: "/settings", roles: ["owner"] },
     { text: "صلاحيات المستخدمين", icon: <PersonAddAltIcon />, path: "/permissions", roles: ["owner"] },
   ];
 

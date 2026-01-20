@@ -4,11 +4,15 @@ const TransactionsContext = createContext();
 
 export const TransactionsProvider = ({ children }) => {
   const [transactions, setTransactions] = useState([]);
+  const [returns, setReturns] = useState([]);
 
   // 1. جلب البيانات من LocalStorage عند تشغيل التطبيق أول مرة
   useEffect(() => {
     const savedTransactions = JSON.parse(localStorage.getItem("app-transactions") || "[]");
     setTransactions(savedTransactions);
+
+    const savedReturns = JSON.parse(localStorage.getItem("app-returns") || "[]");
+    setReturns(savedReturns);
   }, []);
 
   // 2. وظيفة لإضافة عملية بيع جديدة
@@ -36,6 +40,48 @@ export const TransactionsProvider = ({ children }) => {
       return true;
     } catch (error) {
       console.error("Error saving transaction:", error);
+      return false;
+    }
+  };
+
+  //  وظيفة لإضافة عملية مرتجع جديدة مع تحديث الكميات في الفاتورة الأصلية
+  const addReturn = (returnData, adjustStockFn) => {
+    try {
+      // 1. إضافة المرتجع لسجل المرتجعات (كما فعلنا سابقاً)
+      const newReturn = { ...returnData, id: Date.now(), returnDate: new Date().toLocaleString() };
+
+      // تعديل سجل المرتجعات
+      const updatedReturns = [newReturn, ...returns];
+      setReturns(updatedReturns);
+      localStorage.setItem("app-returns", JSON.stringify(updatedReturns));
+
+      // 2. التعديل الجوهري: تحديث الكميات المسترجعة في الفاتورة الأصلية
+      const updatedTransactions = transactions.map((t) => {
+        if (t.invoiceNumber === returnData.originalInvoiceNumber) {
+          return {
+            ...t,
+            items: t.items.map((item) => {
+              // ابحث عن هذا الصنف في قائمة الأصناف التي يتم إرجاعها الآن
+              const returnedItem = returnData.items.find((ri) => ri.id === item.id);
+              if (returnedItem) {
+                // أضف الكمية المسترجعة الجديدة إلى ما تم استرجاعه سابقاً
+                const prevReturnedQuantity = item.returnedQuantity || 0;
+                return { ...item, returnedQuantity: prevReturnedQuantity + returnedItem.quantity };
+              }
+              return item;
+            }),
+          };
+        }
+        return t;
+      });
+      setTransactions(updatedTransactions);
+      localStorage.setItem("app-transactions", JSON.stringify(updatedTransactions));
+
+      // 3. تحديث المخزن
+      returnData.items.forEach((item) => adjustStockFn(item.id, item.quantity));
+
+      return true;
+    } catch (error) {
       return false;
     }
   };
@@ -107,6 +153,8 @@ export const TransactionsProvider = ({ children }) => {
         transactions,
         addTransaction,
         deleteTransaction,
+        returns,
+        addReturn,
         getUniqueCustomers,
         getRevenueByDate,
         getAllTimeRevenue,

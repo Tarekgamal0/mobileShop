@@ -1,73 +1,156 @@
-import { 
-  Dialog, 
-  DialogTitle, 
-  DialogContent, 
-  DialogActions, 
-  Button, 
-  Typography, 
+import React, { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
   Box,
-  Divider,
-  List,
-  ListItem,
-  ListItemText
+  Alert,
 } from "@mui/material";
-import UndoIcon from "@mui/icons-material/Undo";
 
-export default function ReturnDialog({ open, onClose, onConfirm, transaction }) {
-  if (!transaction) return null;
+export default function ReturnDialog({ open, onClose, transaction, onConfirm }) {
+  // تخزين الكميات المراد إرجاعها (بشكل افتراضي 0 لكل الأصناف)
+  const [returnQuantities, setReturnQuantities] = useState({});
+
+  useEffect(() => {
+    if (transaction) {
+      const initialQtys = {};
+      transaction.items.forEach((item) => {
+        initialQtys[item.id] = 0; // البداية دائماً صفر
+      });
+      setReturnQuantities(initialQtys);
+    }
+  }, [transaction]);
+
+  // التعامل مع تغيير الكمية في حقل الإدخال
+  const handleQtyChange = (itemId, val, max) => {
+    const value = Math.max(0, Math.min(max, Number(val))); // ضمان عدم تجاوز الكمية الأصلية
+    setReturnQuantities((prev) => ({ ...prev, [itemId]: value }));
+  };
+
+  const handleProcess = () => {
+    // (حدث لها ارجاع) تصفية الأصناف التي كميتها أكبر من 0 فقط
+    const itemsToReturn = transaction.items
+      .filter((item) => returnQuantities[item.id] > 0)
+      .map((item) => ({
+        ...item,
+        quantity: returnQuantities[item.id], // الكمية الجديدة المسترجعة
+      }));
+
+    if (itemsToReturn.length === 0) return alert("يرجى تحديد كمية صنف واحد على الأقل");
+
+    const totalRefunded = itemsToReturn.reduce((sum, item) => sum + item.quantity * item.price, 0);
+
+    const returnData = {
+      originalInvoiceNumber: transaction.invoiceNumber,
+      customerName: transaction.customer?.name || "عميل نقدي",
+      items: itemsToReturn,
+      totalRefunded: totalRefunded,
+    };
+    onConfirm(returnData);
+  };
 
   return (
-    <Dialog 
-      open={open} 
-      onClose={onClose} 
-      maxWidth="sm" 
-      fullWidth
-      sx={{ direction: 'rtl' }}
-    >
-      <DialogTitle sx={{ fontWeight: "bold", display: "flex", alignItems: "center", gap: 1 }}>
-        <UndoIcon color="error" />
-        تأكيد استرجاع الفاتورة
-      </DialogTitle>
-      
-      <Divider />
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth dir="rtl" disableRestoreFocus>
+      <DialogTitle sx={{ fontWeight: "bold" }}>إرجاع أصناف من الفاتورة #{transaction?.invoiceNumber}</DialogTitle>
+      <DialogContent dividers>
+        <Alert severity="info" sx={{ mb: 2 }}>
+          حدد الكمية التي تريد إرجاعها من كل صنف أدناه. (الكمية المتاحة = الكمية الأصلية - المسترجع سابقاً)
+        </Alert>
+        <Table size="small">
+          <TableHead>
+            <TableRow sx={{ bgcolor: "#f5f5f5" }}>
+              <TableCell sx={{ fontWeight: "bold" }}>المنتج</TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                الكمية الأصلية
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold", color: "error.main" }}>
+                مسترجع سابقاً
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                الكمية المراد إرجاعها
+              </TableCell>
+              <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                سعر الوحدة
+              </TableCell>
+              <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                إجمالي المسترد
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {transaction?.items.map((item) => {
+              // حساب الكمية المتاحة للاسترجاع حالياً
+              const alreadyReturned = item.returnedQuantity || 0;
+              const remainingQty = item.quantity - alreadyReturned;
 
-      <DialogContent>
-        <Typography variant="body1" gutterBottom>
-          هل أنت متأكد من رغبتك في استرجاع هذه العملية؟ 
-          <br />
-          <strong>سيتم إعادة المنتجات التالية إلى المخزن:</strong>
-        </Typography>
+              return (
+                <TableRow key={item.id}>
+                  <TableCell>{item.name}</TableCell>
+                  <TableCell align="center">{item.quantity}</TableCell>
+                  <TableCell align="center" sx={{ color: "error.main", fontWeight: "medium" }}>
+                    {alreadyReturned}
+                  </TableCell>
+                  <TableCell align="center">
+                    <TextField
+                      type="number"
+                      size="small"
+                      // تعطيل الحقل إذا تم إرجاع الكمية بالكامل سابقاً
+                      disabled={remainingQty <= 0}
+                      value={returnQuantities[item.id] || 0}
+                      onChange={(e) => handleQtyChange(item.id, e.target.value, remainingQty)}
+                      inputProps={{
+                        style: { textAlign: "center" },
+                        min: 0,
+                        max: remainingQty, // الحد الأقصى هو المتبقي فقط
+                      }}
+                      helperText={remainingQty <= 0 ? "مسترجع بالكامل" : ""}
+                      sx={{ width: "100px" }}
+                    />
+                  </TableCell>
+                  <TableCell align="right">{item.price} ج.م</TableCell>
+                  <TableCell align="right">
+                    {((returnQuantities[item.id] || 0) * item.price).toLocaleString()} ج.م
+                  </TableCell>
+                </TableRow>
+              );
+            })}
 
-        <Box sx={{ bgcolor: "#fff5f5", p: 1, borderRadius: 1, mt: 2 }}>
-          <List dense>
-            {transaction.items.map((item) => (
-              <ListItem key={item.id}>
-                <ListItemText 
-                  primary={item.name} 
-                  secondary={`الكمية المسترجعة: ${item.quantity} قطعة`} 
-                  sx={{ textAlign: 'right' }}
-                />
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-
-        <Typography variant="body2" color="error" sx={{ mt: 2, fontWeight: "bold" }}>
-          * سيتم حذف هذه العملية نهائياً من سجل المبيعات.
-        </Typography>
+            {/* صف إجمالي المسترد */}
+            <TableRow sx={{ bgcolor: "#fff5f5" }}>
+              <TableCell colSpan={5} align="left" sx={{ fontWeight: "bold", fontSize: "1.1rem" }}>
+                إجمالي المبلغ المسترد للعميل في هذه العملية:
+              </TableCell>
+              <TableCell align="right" sx={{ fontWeight: "bold", fontSize: "1.1rem", color: "error.main" }}>
+                {transaction?.items
+                  .reduce((sum, item) => sum + (returnQuantities[item.id] || 0) * item.price, 0)
+                  .toLocaleString()}{" "}
+                ج.م
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
       </DialogContent>
-
-      <DialogActions sx={{ p: 2, justifyContent: "space-between" }}>
-        <Button onClick={onClose} variant="outlined" color="inherit">
+      <DialogActions sx={{ p: 2 }}>
+        <Button onClick={onClose} color="inherit">
           إلغاء
         </Button>
-        <Button 
-          onClick={onConfirm} 
-          variant="contained" 
-          color="error" 
-          startIcon={<UndoIcon />}
+        <Button
+          onClick={handleProcess}
+          variant="contained"
+          color="error"
+          // تعطيل الزر إذا لم يتم اختيار أي كميات للإرجاع
+          disabled={!Object.values(returnQuantities).some((qty) => qty > 0)}
         >
-          تأكيد الاسترجاع وإعادة للمخزن
+          تأكيد المرتجع
         </Button>
       </DialogActions>
     </Dialog>

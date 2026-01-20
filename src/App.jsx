@@ -20,6 +20,8 @@ import ServiceRepair from "./routes/seller/ServiceRepair";
 import MainLayout from "./components/MainLayout";
 import Dashboard from "./routes/owner/Dashboard";
 import Transactions from "./routes/seller/Transactions";
+import TransactionsMangement from "./routes/owner/TransactionsMangement";
+import ReturnsHistory from "./routes/seller/ReturnsHistory";
 
 const theme = createTheme({
   palette: {
@@ -60,6 +62,7 @@ function App() {
               <Route path="/inventory" element={<Inventory />} />
               <Route path="/customers" element={<Customers />} />
               <Route path="/transactions" element={<Transactions />} />
+              <Route path="/returns" element={<ReturnsHistory />} />
             </Route>
           </Route>
 
@@ -68,6 +71,7 @@ function App() {
             <Route element={<MainLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/inventory-manage" element={<InventoryMangement />} />
+              {/* <Route path="/transactions-manage" element={<TransactionsMangement />} /> */}
               <Route path="/reports" element={<Reports />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/staff" element={<Staff />} />

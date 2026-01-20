@@ -10,16 +10,32 @@ import {
   Chip,
   IconButton,
   Collapse,
+  Button,
 } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import CashIcon from "@mui/icons-material/Payments";
 import VisaIcon from "@mui/icons-material/CreditCard";
 import TransferIcon from "@mui/icons-material/AccountBalance";
+import ReturnDialog from "./ReturnDialog";
+import { useTransactions } from "../../contexts/TransactionsContext";
+import { useProducts } from "../../contexts/ProductContext";
+import UndoIcon from "@mui/icons-material/Undo";
 
 export default function TransactionRow({ transaction }) {
   const [open, setOpen] = useState(false);
 
+  const [returnDialogOpen, setReturnDialogOpen] = useState(false);
+  const { addReturn } = useTransactions();
+  const { adjustStock } = useProducts();
+
+  const handleReturnConfirm = (returnData) => {
+    const success = addReturn(returnData, adjustStock);
+    if (success) {
+      setReturnDialogOpen(false);
+      alert("تم تسجيل المرتجع وتحديث المخزن بنجاح");
+    }
+  };
   return (
     <>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
@@ -64,6 +80,17 @@ export default function TransactionRow({ transaction }) {
         <TableCell align="left" sx={{ fontWeight: "bold", color: "primary.main" }}>
           {transaction.total?.toLocaleString()} ج.م
         </TableCell>
+        <TableCell align="center">
+          <Button
+            variant="outlined"
+            color="warning"
+            size="small"
+            startIcon={<UndoIcon />}
+            onClick={() => setReturnDialogOpen(true)}
+          >
+            استرجاع
+          </Button>
+        </TableCell>
       </TableRow>
 
       <TableRow>
@@ -97,6 +124,13 @@ export default function TransactionRow({ transaction }) {
           </Collapse>
         </TableCell>
       </TableRow>
+
+      <ReturnDialog
+        open={returnDialogOpen}
+        onClose={() => setReturnDialogOpen(false)}
+        transaction={transaction}
+        onConfirm={handleReturnConfirm}
+      />
     </>
   );
 }

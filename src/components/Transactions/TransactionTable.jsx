@@ -14,6 +14,9 @@ export default function TransactionTable({ data }) {
             <TableCell>العميل</TableCell>
             <TableCell>الدفع</TableCell>
             <TableCell align="left">الإجمالي</TableCell>
+            <TableCell align="center" sx={{ fontWeight: "bold" }}>
+              العمليات
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
