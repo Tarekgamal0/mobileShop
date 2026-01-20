@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import bcrypt from "bcryptjs";
 
 const AuthContext = createContext({});
 
@@ -28,20 +29,24 @@ export default function AuthProvider({ children }) {
 
   const updatePassword = (allUsers, currentPassword, newPassword) => {
     // const allUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
-    console.log(user);
 
-    if (user.password !== currentPassword) {
+    // 1. التأكد من كلمة المرور الحالية باستخدام compare
+    if (!bcrypt.compareSync(currentPassword, user.password)) {
       return { success: false, message: "كلمة المرور الحالية غير صحيحة" };
     }
 
+    // 2. تشفير كلمة المرور الجديدة (Salt rounds = 10)
+    const hashedPassword = bcrypt.hashSync(newPassword.trim(), 10);
+
+    // 3. تحديث مصفوفة المستخدمين
     const updatedUsers = allUsers.map((u) => {
-      if (u.username === user.username) return { ...u, password: newPassword };
+      if (u.username === user.username) return { ...u, password: hashedPassword };
       return u;
     });
 
     localStorage.setItem("app_users", JSON.stringify(updatedUsers));
 
-    const updatedUser = { ...user, password: newPassword };
+    const updatedUser = { ...user, password: hashedPassword };
     setUser(updatedUser);
     localStorage.setItem("current_user", JSON.stringify(updatedUser));
 

@@ -1,11 +1,11 @@
 import initialUsers from "../mocks/users.json";
+import bcrypt from "bcryptjs";
 
 export const mockLogin = (username, password) => {
   // 1. جلب البيانات من الـ LocalStorage مباشرة
   const savedUsers = localStorage.getItem("app_users");
 
   let usersList;
-
   if (savedUsers) {
     usersList = JSON.parse(savedUsers);
   } else {
@@ -17,9 +17,9 @@ export const mockLogin = (username, password) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       // 3. البحث في القائمة التي حصلنا عليها
-      const user = usersList.find((u) => u.username === username && u.password === password);
+      const user = usersList.find((u) => u.username === username);
 
-      if (user) {
+      if (user && bcrypt.compareSync(password.trim(), user.password.trim())) {
         // نرسل البيانات بدون كلمة المرور للأمان
         // const { password: _, ...userData } = user;
         resolve(user);

@@ -3,7 +3,7 @@
     "id": 1,
     "name": "أحمد (المالك)",
     "username": "admin",
-    "password": "123",
+    "password": "$2b$10$d.ocrCDHm0ZKUKnJmKtqP.Pmt144iCVu8Uzm223YZvHaDABQBM3Xy",
     "role": "owner",
     "token": "fake-jwt-token-owner"
   },
@@ -11,7 +11,7 @@
     "id": 2,
     "name": "محمد (البائع)",
     "username": "seller",
-    "password": "123",
+    "password": "$2b$10$d.ocrCDHm0ZKUKnJmKtqP.Pmt144iCVu8Uzm223YZvHaDABQBM3Xy",
     "role": "seller",
     "token": "fake-jwt-token-seller"
   }
