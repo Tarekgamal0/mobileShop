@@ -23,6 +23,7 @@ import {
   DialogContent,
   DialogActions,
   Alert,
+  Snackbar,
 } from "@mui/material";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import PersonIcon from "@mui/icons-material/Person";
@@ -70,6 +71,8 @@ export default function UserPermissions() {
   const [tempPermissions, setTempPermissions] = useState([]); // الصلاحيات المؤقتة في النافذة
   const [permDialogOpen, setPermDialogOpen] = useState(false); // حالة فتح نافذة الصلاحيات
 
+  const [snackbar, setSnackbar] = useState({ open: false, message: "" });
+
   const handleOpenPerms = (user) => {
     setEditingUser(user);
     setTempPermissions(user.permissions || []); // شحن الصلاحيات الحالية
@@ -80,6 +83,7 @@ export default function UserPermissions() {
     if (editingUser?.id) {
       updateUserPermissions(editingUser.id, tempPermissions);
       setPermDialogOpen(false);
+      setSnackbar({ open: true, message: `تم تحديث صلاحيات ${editingUser.name} بنجاح` });
     }
   };
 
@@ -99,7 +103,6 @@ export default function UserPermissions() {
           إضافة موظف جديد
         </Button>
       </Box>
-
       {/* شريط البحث */}
       <Paper sx={{ p: 2, mb: 3, borderRadius: 2 }}>
         <TextField
@@ -118,7 +121,6 @@ export default function UserPermissions() {
           }}
         />
       </Paper>
-
       {/* الجدول */}
       <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: 3 }}>
         <Table sx={{ minWidth: 650 }}>
@@ -127,7 +129,8 @@ export default function UserPermissions() {
               <TableCell sx={{ color: "white", fontWeight: "bold", textAlign: "center" }}>الموظف</TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold", textAlign: "center" }}>اسم المستخدم</TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold", textAlign: "center" }}>الرتبة</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold", textAlign: "center" }}>الإجراءات</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold", textAlign: "center" }}>الصلاحيات</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold", textAlign: "center" }}>الحذف</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -145,35 +148,42 @@ export default function UserPermissions() {
                 </TableCell>
                 <TableCell sx={{ textAlign: "center" }}>{user.username}</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>
-                  <Chip
-                    label={user.role === "owner" ? "مدير نظام" : "بائع"}
-                    color={user.role === "owner" ? "secondary" : "info"}
+                  <Select
                     size="small"
-                  />
+                    value={user.role}
+                    onChange={(e) => updateUserRole(user.id, e.target.value)}
+                    sx={{ minWidth: 110, borderRadius: 2 }}
+                  >
+                    <MenuItem value="owner">مدير</MenuItem>
+                    <MenuItem value="seller">بائع</MenuItem>
+                  </Select>
                 </TableCell>
                 <TableCell sx={{ textAlign: "center" }}>
                   <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 1 }}>
                     {/* زر فتح الصلاحيات الجديد */}
-                    <Tooltip title="تعديل الصلاحيات الدقيقة">
-                      <div>
-                        <IconButton
-                          color="primary"
+                    <Tooltip title={user.role === "owner" ? "المدير لديه كافة الصلاحيات" : "تعديل صلاحيات الوصول"}>
+                      <span>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          startIcon={<AdminPanelSettingsIcon />}
                           onClick={() => handleOpenPerms(user)}
-                          disabled={user.role === "owner"} // المالك لديه كل الصلاحيات تلقائياً
+                          disabled={user.role === "owner"}
+                          sx={{
+                            borderRadius: 2,
+                            textTransform: "none",
+                            fontSize: "0.75rem",
+                            px: 2,
+                          }}
                         >
-                          <AdminPanelSettingsIcon />
-                        </IconButton>
-                      </div>
+                          الصلاحيات
+                        </Button>
+                      </span>
                     </Tooltip>
-                    <Select
-                      size="small"
-                      value={user.role}
-                      onChange={(e) => updateUserRole(user.id, e.target.value)}
-                      sx={{ minWidth: 110, borderRadius: 2 }}
-                    >
-                      <MenuItem value="owner">مدير</MenuItem>
-                      <MenuItem value="seller">بائع</MenuItem>
-                    </Select>
+                  </Box>
+                </TableCell>
+                <TableCell sx={{ textAlign: "center" }}>
+                  <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 1 }}>
                     <Tooltip title="حذف">
                       <IconButton color="error" onClick={() => window.confirm("هل أنت متأكد؟") && deleteUser(user.id)}>
                         <DeleteSweepIcon />
@@ -186,7 +196,6 @@ export default function UserPermissions() {
           </TableBody>
         </Table>
       </TableContainer>
-
       <AddUserDialog
         open={open}
         handleClose={handleClose}
@@ -195,7 +204,6 @@ export default function UserPermissions() {
         setNewUser={setNewUser}
         error={error}
       />
-
       <PermissionDialog
         open={permDialogOpen}
         onClose={() => setPermDialogOpen(false)}
@@ -204,6 +212,18 @@ export default function UserPermissions() {
         setTempPermissions={setTempPermissions}
         onSave={handleSavePerms}
       />
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        // اضبط الموقع هنا:
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert severity="success" variant="filled">
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+      ;
     </Box>
   );
 }
