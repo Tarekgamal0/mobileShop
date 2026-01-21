@@ -52,7 +52,7 @@ export const UserProvider = ({ children }) => {
       ...userData,
       id: Date.now(),
       password: bcrypt.hashSync(userData.password, 10), // تشفير تلقائي عند الإضافة
-      permissions: userData.role === "owner" ? [] : ["pos_view"], // صلاحية افتراضية للبائع
+      permissions: userData.role === "owner" ? [] : ["pos_view", "inventory_view", "transactions_view", "returns_view"], // صلاحية افتراضية للبائع
     };
     const updated = [...users, userWithId];
     setUsers(updated);
