@@ -51,38 +51,59 @@ function App() {
     <>
       <ThemeProvider theme={theme}>
         <Routes>
-          {/* 1. المسارات العامة (بدون Sidebar) */}
+          {/* 1. المسارات العامة */}
           <Route path="/login" element={<Login />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
 
-          {/* 2. مسارات مشتركة (البائع والمالك) - داخل Layout مع Sidebar */}
-          <Route element={<ProtectedRoute allowedRoles={["seller", "owner"]} />}>
-            <Route element={<MainLayout />}>
+          {/* 2. المسارات المحمية داخل Layout */}
+          <Route element={<MainLayout />}>
+            {/* مسار البروفايل متاح للجميع (بدون صلاحية خاصة) */}
+            <Route path="/profile" element={<Profile />} />
+
+            {/* مسارات العمليات اليومية */}
+            <Route element={<ProtectedRoute requiredPermission="pos_view" />}>
               <Route path="/pos" element={<POS />} />
-              <Route path="/repair" element={<ServiceRepair />} />
-              <Route path="/inventory" element={<Inventory />} />
-              <Route path="/customers" element={<Customers />} />
-              <Route path="/transactions" element={<Transactions />} />
-              <Route path="/returns" element={<ReturnsHistory />} />
-              <Route path="/profile" element={<Profile />} />
             </Route>
-          </Route>
 
-          {/* 3. مسارات المالك فقط - داخل نفس الـ Layout */}
-          <Route element={<ProtectedRoute allowedRoles={["owner"]} />}>
-            <Route element={<MainLayout />}>
+            <Route element={<ProtectedRoute requiredPermission="inventory_view" />}>
+              <Route path="/inventory" element={<Inventory />} />
+            </Route>
+
+            <Route element={<ProtectedRoute requiredPermission="customers_view" />}>
+              <Route path="/customers" element={<Customers />} />
+            </Route>
+
+            <Route element={<ProtectedRoute requiredPermission="transactions_view" />}>
+              <Route path="/transactions" element={<Transactions />} />
+            </Route>
+
+            <Route element={<ProtectedRoute requiredPermission="returns_view" />}>
+              <Route path="/returns" element={<ReturnsHistory />} />
+            </Route>
+
+            {/* مسارات الإدارة (عادة للمالك فقط أو بائع متميز) */}
+            <Route element={<ProtectedRoute requiredPermission="dashboard_view" />}>
               <Route path="/dashboard" element={<Dashboard />} />
+            </Route>
+
+            <Route element={<ProtectedRoute requiredPermission="inventory_manage" />}>
               <Route path="/inventory-manage" element={<InventoryMangement />} />
-              {/* <Route path="/transactions-manage" element={<TransactionsMangement />} /> */}
+            </Route>
+
+            <Route element={<ProtectedRoute requiredPermission="reports_view" />}>
               <Route path="/reports" element={<Reports />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/staff" element={<Staff />} />
+            </Route>
+
+            <Route element={<ProtectedRoute requiredPermission="permissions_manage" />}>
               <Route path="/permissions" element={<UserPermissions />} />
             </Route>
-          </Route>
 
-          {/* 4. إعادة توجيه لأي مسار خطأ */}
-          <Route path="*" element={<Navigate to="/login" replace />} />
+            {/* مسارات إضافية */}
+            <Route element={<ProtectedRoute requiredPermission="settings_view" />}>
+              <Route path="/settings" element={<Settings />} />
+            </Route>
+          </Route>
         </Routes>
       </ThemeProvider>
     </>

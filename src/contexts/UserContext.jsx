@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import initialUsers from "../mocks/users.json"; // تأكد من مسار ملف الـ JSON
+import bcrypt from "bcryptjs";
 
 const UserContext = createContext();
 
@@ -38,10 +39,6 @@ export const UserProvider = ({ children }) => {
       user.username.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  // const getUserById = (id) => {
-  //   return users.find((user) => user.id === Number(id));
-  // };
-
   // دالة حذف مستخدم
   const deleteUser = (id) => {
     const updated = users.filter((user) => user.id !== id);
@@ -50,8 +47,13 @@ export const UserProvider = ({ children }) => {
   };
 
   // دالة إضافة مستخدم جديد
-  const addUser = (newUser) => {
-    const userWithId = { ...newUser, id: Date.now() }; // توليد ID مؤقت
+  const addUser = (userData) => {
+    const userWithId = {
+      ...userData,
+      id: Date.now(),
+      password: bcrypt.hashSync(userData.password, 10), // تشفير تلقائي عند الإضافة
+      permissions: userData.role === "owner" ? [] : ["pos_view"], // صلاحية افتراضية للبائع
+    };
     const updated = [...users, userWithId];
     setUsers(updated);
     // localStorage.setItem("app_users", JSON.stringify(updated));
@@ -64,6 +66,12 @@ export const UserProvider = ({ children }) => {
     // localStorage.setItem("app_users", JSON.stringify(updated));
   };
 
+  const updateUserPermissions = (userId, newPermissions) => {
+    const updatedList = users.map((u) => (u.id === userId ? { ...u, permissions: newPermissions } : u));
+    setUsers(updatedList);
+    localStorage.setItem("app_users", JSON.stringify(updatedList));
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -74,6 +82,7 @@ export const UserProvider = ({ children }) => {
         deleteUser,
         addUser,
         updateUserRole,
+        updateUserPermissions,
         loading,
       }}
     >

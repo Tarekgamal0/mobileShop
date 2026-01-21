@@ -30,9 +30,12 @@ import SearchIcon from "@mui/icons-material/Search";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import AddIcon from "@mui/icons-material/Add";
 import { useUsers } from "../../contexts/UserContext";
+import PermissionDialog from "../../components/UserPermissions/PermissionDialog";
+import AddUserDialog from "../../components/UserPermissions/AddUserDialog";
 
 export default function UserPermissions() {
-  const { users, searchQuery, setSearchQuery, updateUserRole, deleteUser, addUser, allUsers } = useUsers();
+  const { users, searchQuery, setSearchQuery, updateUserRole, deleteUser, addUser, allUsers, updateUserPermissions } =
+    useUsers();
 
   // حالات النافذة والنموذج
   const [open, setOpen] = useState(false);
@@ -61,6 +64,23 @@ export default function UserPermissions() {
 
     addUser(newUser);
     handleClose();
+  };
+
+  const [editingUser, setEditingUser] = useState(null); // المستخدم الجاري تعديل صلاحياته
+  const [tempPermissions, setTempPermissions] = useState([]); // الصلاحيات المؤقتة في النافذة
+  const [permDialogOpen, setPermDialogOpen] = useState(false); // حالة فتح نافذة الصلاحيات
+
+  const handleOpenPerms = (user) => {
+    setEditingUser(user);
+    setTempPermissions(user.permissions || []); // شحن الصلاحيات الحالية
+    setPermDialogOpen(true);
+  };
+
+  const handleSavePerms = () => {
+    if (editingUser?.id) {
+      updateUserPermissions(editingUser.id, tempPermissions);
+      setPermDialogOpen(false);
+    }
   };
 
   return (
@@ -133,6 +153,18 @@ export default function UserPermissions() {
                 </TableCell>
                 <TableCell sx={{ textAlign: "center" }}>
                   <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 1 }}>
+                    {/* زر فتح الصلاحيات الجديد */}
+                    <Tooltip title="تعديل الصلاحيات الدقيقة">
+                      <div>
+                        <IconButton
+                          color="primary"
+                          onClick={() => handleOpenPerms(user)}
+                          disabled={user.role === "owner"} // المالك لديه كل الصلاحيات تلقائياً
+                        >
+                          <AdminPanelSettingsIcon />
+                        </IconButton>
+                      </div>
+                    </Tooltip>
                     <Select
                       size="small"
                       value={user.role}
@@ -155,63 +187,23 @@ export default function UserPermissions() {
         </Table>
       </TableContainer>
 
-      {/* نافذة الإضافة (Dialog) */}
-      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xs" disableRestoreFocus>
-        <DialogTitle sx={{ textAlign: "right", fontWeight: "bold" }}>بيانات الموظف الجديد</DialogTitle>
-        <form onSubmit={handleSubmit}>
-          <DialogContent dir="rtl">
-            {error && (
-              <Alert severity="error" sx={{ mb: 2 }}>
-                {error}
-              </Alert>
-            )}
-            <TextField
-              fullWidth
-              label="الاسم الثلاثي"
-              margin="normal"
-              required
-              value={newUser.name}
-              onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
-            />
-            <TextField
-              fullWidth
-              label="اسم المستخدم (Login)"
-              margin="normal"
-              required
-              value={newUser.username}
-              onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
-            />
-            <TextField
-              fullWidth
-              label="كلمة المرور"
-              type="password"
-              margin="normal"
-              required
-              value={newUser.password}
-              onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
-            />
-            <TextField
-              select
-              fullWidth
-              label="الصلاحية"
-              margin="normal"
-              value={newUser.role}
-              onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
-            >
-              <MenuItem value="owner">مدير (Owner)</MenuItem>
-              <MenuItem value="seller">بائع (Seller)</MenuItem>
-            </TextField>
-          </DialogContent>
-          <DialogActions sx={{ p: 2, justifyContent: "space-between" }}>
-            <Button onClick={handleClose} color="inherit">
-              إلغاء
-            </Button>
-            <Button type="submit" variant="contained">
-              إضافة الحساب
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog>
+      <AddUserDialog
+        open={open}
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        newUser={newUser}
+        setNewUser={setNewUser}
+        error={error}
+      />
+
+      <PermissionDialog
+        open={permDialogOpen}
+        onClose={() => setPermDialogOpen(false)}
+        editingUser={editingUser}
+        tempPermissions={tempPermissions}
+        setTempPermissions={setTempPermissions}
+        onSave={handleSavePerms}
+      />
     </Box>
   );
 }

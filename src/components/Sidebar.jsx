@@ -22,6 +22,7 @@ import {
   Settings,
   Logout,
   Paid,
+  Undo,
   AccountCircle,
 } from "@mui/icons-material";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
@@ -34,22 +35,23 @@ export default function Sidebar() {
   const location = useLocation();
 
   // مصفوفة الروابط مع تحديد الأدوار
+  // const menuItems = [
+  // { text: "العمليات", icon: <Paid />, path: "/transactions-manage", roles: ["owner"] },
+  // { text: "الصيانة", icon: <Build />, path: "/repair", roles: ["owner", "seller"] },
+  // { text: "الموظفين", icon: <People />, path: "/staff", roles: ["owner"] },
+  // { text: "الإعدادات", icon: <Settings />, path: "/settings", roles: ["owner"] },
+  // ];
+  // مصفوفة الروابط تعتمد الآن على الصلاحيات (permissions)
   const menuItems = [
-    { text: "لوحة التحكم", icon: <Dashboard />, path: "/dashboard", roles: ["owner"] },
-    { text: "نقطة البيع", icon: <PointOfSale />, path: "/pos", roles: ["owner", "seller"] },
-    // { text: "العمليات", icon: <Paid />, path: "/transactions-manage", roles: ["owner"] },
-    { text: "العمليات", icon: <Paid />, path: "/transactions", roles: ["owner", "seller"] },
-    { text: "المرتجع", icon: <Inventory />, path: "/returns", roles: ["owner", "seller"] },
-    { text: "المخزن", icon: <Inventory />, path: "/inventory", roles: ["seller"] },
-    { text: "المخزن", icon: <Inventory />, path: "/inventory-manage", roles: ["owner"] },
-    // { text: "الصيانة", icon: <Build />, path: "/repair", roles: ["owner", "seller"] },
-    { text: "سجل العملاء", icon: <People />, path: "/customers", roles: ["owner", "seller"] },
-    // { text: "الموظفين", icon: <People />, path: "/staff", roles: ["owner"] },
-    { text: "التقارير", icon: <Assessment />, path: "/reports", roles: ["owner"] },
-    // { text: "الإعدادات", icon: <Settings />, path: "/settings", roles: ["owner"] },
-    { text: "صلاحيات المستخدمين", icon: <PersonAddAltIcon />, path: "/permissions", roles: ["owner"] },
+    { text: "لوحة التحكم", icon: <Dashboard />, path: "/dashboard", permission: "dashboard_view" },
+    { text: "نقطة البيع", icon: <PointOfSale />, path: "/pos", permission: "pos_view" },
+    { text: "العمليات", icon: <Paid />, path: "/transactions", permission: "transactions_view" },
+    { text: "المرتجع", icon: <Undo />, path: "/returns", permission: "returns_view" },
+    { text: "المخزن", icon: <Inventory />, path: "/inventory", permission: "inventory_view" },
+    { text: "سجل العملاء", icon: <People />, path: "/customers", permission: "customers_view" },
+    { text: "التقارير", icon: <Assessment />, path: "/reports", permission: "reports_view" },
+    { text: "صلاحيات المستخدمين", icon: <PersonAddAltIcon />, path: "/permissions", permission: "permissions_manage" },
   ];
-
   return (
     <Drawer
       variant="permanent"
@@ -70,10 +72,12 @@ export default function Sidebar() {
       <Divider sx={{ bgcolor: "gray" }} />
 
       <List>
-        {menuItems.map(
-          (item) =>
-            // شرط العرض بناءً على الـ Role
-            item.roles.includes(user?.role) && (
+        {menuItems.map((item) => {
+          // شرط العرض: إذا كان المستخدم "owner" يرى كل شيء، أو إذا كانت الصلاحية موجودة في مصفوفة permissions الخاصة به
+          const hasAccess = user?.role === "owner" || user?.permissions?.includes(item.permission);
+
+          return (
+            hasAccess && (
               <ListItem key={item.text} disablePadding>
                 <ListItemButton
                   onClick={() => navigate(item.path)}
@@ -89,13 +93,13 @@ export default function Sidebar() {
                   <ListItemText primary={item.text} sx={{ textAlign: "left" }} />
                 </ListItemButton>
               </ListItem>
-            ),
-        )}
+            )
+          );
+        })}
       </List>
 
       <Box sx={{ marginTop: "auto", pb: 2 }}>
         <Divider sx={{ bgcolor: "gray" }} />
-        
         {/* زر الملف الشخصي الجديد */}
         <ListItemButton
           onClick={() => navigate("/profile")}

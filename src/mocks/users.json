@@ -13,6 +13,7 @@
     "username": "seller",
     "password": "$2b$10$d.ocrCDHm0ZKUKnJmKtqP.Pmt144iCVu8Uzm223YZvHaDABQBM3Xy",
     "role": "seller",
+    "permissions": ["pos_view", "inventory_view", "returns_create"],
     "token": "fake-jwt-token-seller"
   }
 ]
