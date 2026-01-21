@@ -22,7 +22,7 @@ import { useTransactions } from "../../contexts/TransactionsContext";
 import { useProducts } from "../../contexts/ProductContext";
 import UndoIcon from "@mui/icons-material/Undo";
 
-export default function TransactionRow({ transaction }) {
+export default function TransactionRow({ transaction, canReturn }) {
   const [open, setOpen] = useState(false);
 
   const [returnDialogOpen, setReturnDialogOpen] = useState(false);
@@ -80,17 +80,19 @@ export default function TransactionRow({ transaction }) {
         <TableCell align="left" sx={{ fontWeight: "bold", color: "primary.main" }}>
           {transaction.total?.toLocaleString()} ج.م
         </TableCell>
-        <TableCell align="center">
-          <Button
-            variant="outlined"
-            color="warning"
-            size="small"
-            startIcon={<UndoIcon />}
-            onClick={() => setReturnDialogOpen(true)}
-          >
-            استرجاع
-          </Button>
-        </TableCell>
+        {canReturn && (
+          <TableCell align="center">
+            <Button
+              variant="outlined"
+              color="warning"
+              size="small"
+              startIcon={<UndoIcon />}
+              onClick={() => setReturnDialogOpen(true)}
+            >
+              استرجاع
+            </Button>
+          </TableCell>
+        )}
       </TableRow>
 
       <TableRow>

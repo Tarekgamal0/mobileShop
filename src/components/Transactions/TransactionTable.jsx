@@ -1,7 +1,7 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import TransactionRow from "./TransactionsRow";
 
-export default function TransactionTable({ data }) {
+export default function TransactionTable({ data, canReturn }) {
   return (
     <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: 3, direction: "ltr" }}>
       <Table>
@@ -14,14 +14,18 @@ export default function TransactionTable({ data }) {
             <TableCell>العميل</TableCell>
             <TableCell>الدفع</TableCell>
             <TableCell align="left">الإجمالي</TableCell>
-            <TableCell align="center" sx={{ fontWeight: "bold" }}>
-              العمليات
-            </TableCell>
+            {canReturn && (
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                العمليات
+              </TableCell>
+            )}
           </TableRow>
         </TableHead>
         <TableBody>
           {data.length > 0 ? (
-            data.map((transaction) => <TransactionRow key={transaction.id} transaction={transaction} />)
+            data.map((transaction) => (
+              <TransactionRow key={transaction.id} transaction={transaction} canReturn={canReturn} />
+            ))
           ) : (
             <TableRow>
               <TableCell colSpan={7} align="center" sx={{ py: 5 }}>

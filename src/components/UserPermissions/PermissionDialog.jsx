@@ -9,18 +9,9 @@ import {
   Checkbox,
   Button,
 } from "@mui/material";
+import ALL_PERMISSIONS from "../../ALL_PERMISSIONS";
 
 // مصفوفة الصلاحيات (يفضل وضعها في ملف ثابت مستقل واستيرادها)
-const ALL_PERMISSIONS = [
-  { id: "dashboard_view", label: "لوحة التحكم" },
-  { id: "pos_view", label: "نقطة البيع" },
-  { id: "inventory_view", label: "المخزن" },
-  { id: "customers_view", label: "سجل العملاء" },
-  { id: "transactions_view", label: "سجل العمليات" },
-  { id: "returns_view", label: "المرتجعات" },
-  { id: "reports_view", label: "التقارير" },
-  { id: "permissions_manage", label: "إدارة الصلاحيات" },
-];
 
 export default function PermissionDialog({ open, onClose, editingUser, tempPermissions, setTempPermissions, onSave }) {
   const handleToggle = (permId) => {

@@ -4,10 +4,16 @@ import { Box, Typography } from "@mui/material";
 import SearchField from "../../components/shared/SearchField";
 import TransactionTable from "../../components/Transactions/TransactionTable";
 import { useTransactions } from "../../contexts/TransactionsContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function Transactions() {
   const { transactions } = useTransactions();
   const [searchTerm, setSearchTerm] = useState("");
+
+  const { user } = useAuth();
+
+  // فحص صلاحية الاسترجاع
+  const canReturn = user?.role === "owner" || user?.permissions?.includes("transactions_return");
 
   // فلترة العمليات بناءً على اسم العميل، البائع، أو التاريخ
   const filteredTransactions = transactions.filter(
@@ -30,7 +36,7 @@ export default function Transactions() {
         onChange={(e) => setSearchTerm(e.target.value)}
       />
 
-      <TransactionTable data={filteredTransactions} />
+      <TransactionTable data={filteredTransactions} canReturn={canReturn} />
     </Box>
   );
 }

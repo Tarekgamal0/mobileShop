@@ -6,7 +6,6 @@ import Login from "./routes/Login";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Unauthorized from "./routes/Unauthorized";
 
-import InventoryMangement from "./routes/owner/InventoryMangement";
 import Reports from "./routes/owner/Reports";
 import Settings from "./routes/owner/Settings";
 import Staff from "./routes/owner/Staff";
@@ -20,7 +19,6 @@ import ServiceRepair from "./routes/seller/ServiceRepair";
 import MainLayout from "./components/MainLayout";
 import Dashboard from "./routes/owner/Dashboard";
 import Transactions from "./routes/seller/Transactions";
-import TransactionsMangement from "./routes/owner/TransactionsMangement";
 import ReturnsHistory from "./routes/seller/ReturnsHistory";
 import Profile from "./routes/seller/Profile";
 
@@ -85,10 +83,6 @@ function App() {
             {/* مسارات الإدارة (عادة للمالك فقط أو بائع متميز) */}
             <Route element={<ProtectedRoute requiredPermission="dashboard_view" />}>
               <Route path="/dashboard" element={<Dashboard />} />
-            </Route>
-
-            <Route element={<ProtectedRoute requiredPermission="inventory_manage" />}>
-              <Route path="/inventory-manage" element={<InventoryMangement />} />
             </Route>
 
             <Route element={<ProtectedRoute requiredPermission="reports_view" />}>
