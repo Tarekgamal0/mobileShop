@@ -15,14 +15,14 @@ import { useTransactions } from "../../contexts/TransactionsContext";
 import TransactionsList from "../transactionsList";
 
 export default function ZReportDialog({ open, onClose }) {
-  const { transactions } = useTransactions(); // مصفوفة واحدة الآن تجمع النوعين
+  const { transactions, closeShift } = useTransactions(); // مصفوفة واحدة الآن تجمع النوعين
 
   // 1. تصفية البيانات لليوم الحالي فقط
   const todayDate = new Date().toLocaleDateString();
-  const todayTransactions = transactions.filter((t) => new Date(t.date).toLocaleDateString() === todayDate);
+  const currentTransactions = transactions.filter((t) => t.status === "open");
 
   // 2. حساب الإحصائيات في دورة واحدة (Single Pass)
-  const stats = todayTransactions.reduce(
+  const stats = currentTransactions.reduce(
     (acc, curr) => {
       const amount = curr.total || 0;
       const method = curr.paymentMethod;
@@ -63,6 +63,7 @@ export default function ZReportDialog({ open, onClose }) {
   const handleConfirmZReport = () => {
     // ترحيل البيانات...
     console.log("التقرير النهائي لليوم:", netStats);
+    closeShift();
     onClose();
   };
 
@@ -137,7 +138,7 @@ export default function ZReportDialog({ open, onClose }) {
             </Grid>
           </Grid>
 
-          <TransactionsList transactions={todayTransactions} />
+          <TransactionsList transactions={currentTransactions} />
         </Stack>
       </DialogContent>
 

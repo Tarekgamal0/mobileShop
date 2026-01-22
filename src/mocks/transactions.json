@@ -6,7 +6,7 @@
     "customer": { "name": "ياسين عبده", "phone": "01555667788" },
     "seller": "أحمد (المالك)",
     "type": "sale",
-    "status": "open",
+    "status": "closed",
     "paymentMethod": "cash",
     "items": [{ "id": 13, "name": "iPad Air M2", "price": 38000, "quantity": 1 }],
     "total": 38000
@@ -18,7 +18,7 @@
     "customer": { "name": "عميل نقدي", "phone": "غير مسجل" },
     "seller": "أحمد (المالك)",
     "type": "sale",
-    "status": "open",
+    "status": "closed",
     "paymentMethod": "visa",
     "items": [{ "id": 6, "name": "Apple Watch Series 9", "price": 22000, "quantity": 1 }],
     "total": 22000

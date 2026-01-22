@@ -156,7 +156,35 @@ export const TransactionsProvider = ({ children }) => {
       netSpent: customer.totalSales - customer.totalReturns,
     }));
   };
-  // 6. جلب الأرباح حسب التاريخ (طرح المرتجعات)
+
+  // 6. إغلاق الوردية الحالية
+  const closeShift = () => {
+    // نقوم فقط بتحويل العمليات المفتوحة إلى مغلقة
+    const updatedTransactions = transactions.map((t) => {
+      if (t.status === "open") {
+        return {
+          ...t,
+          status: "closed",
+          closedAt: new Date().toLocaleString(), // توقيت التصفير الفعلي
+        };
+      }
+      return t;
+    });
+
+    setTransactions(updatedTransactions);
+    saveToLocal(updatedTransactions);
+    return true;
+  };
+  // جلب الأرباح للوردية المفتوحة حالياً فقط (للفترة الحالية قبل التصفير)
+  const getOpenShiftRevenue = () => {
+    return transactions
+      .filter((t) => t.status === "open")
+      .reduce((sum, t) => {
+        return t.type === "return" ? sum - t.total : sum + t.total;
+      }, 0);
+  };
+
+  // جلب الأرباح حسب التاريخ (شاملة المغلق والمفتوح لمراجعة اليوم كاملاً)
   const getRevenueByDate = (targetDate) => {
     return transactions
       .filter((t) => t.date.split(",")[0] === targetDate)
@@ -165,6 +193,7 @@ export const TransactionsProvider = ({ children }) => {
       }, 0);
   };
 
+  //تعديل دالة getAllTimeRevenue لتكون شاملة
   const getAllTimeRevenue = () => {
     const dailyRevenue = {};
     transactions.forEach((t) => {
@@ -188,6 +217,8 @@ export const TransactionsProvider = ({ children }) => {
         addReturn,
         // deleteTransaction,
         getUniqueCustomers,
+        closeShift,
+        getOpenShiftRevenue,
         getRevenueByDate,
         getAllTimeRevenue,
       }}
