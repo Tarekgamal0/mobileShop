@@ -1,18 +1,25 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
+import initialTransactions from "../mocks/transactions.json";
 
 const TransactionsContext = createContext();
 
 export const TransactionsProvider = ({ children }) => {
   const [transactions, setTransactions] = useState([]);
-  // const [returns, setReturns] = useState([]);
+  const [loading, setLoading] = useState(true); // تأكد من تعريف loading
 
-  // 1. جلب البيانات من LocalStorage عند تشغيل التطبيق أول مرة
+  // تحميل البيانات عند البداية
   useEffect(() => {
-    const savedTransactions = JSON.parse(localStorage.getItem("app-transactions") || "[]");
-    setTransactions(savedTransactions);
+    // 1. جلب البيانات من LocalStorage
+    const savedTransactions = localStorage.getItem("app-transactions");
 
-    // const savedReturns = JSON.parse(localStorage.getItem("app-returns") || "[]");
-    // setReturns(savedReturns);
+    if (savedTransactions) {
+      setTransactions(JSON.parse(savedTransactions));
+    } else {
+      setTransactions(initialTransactions);
+      localStorage.setItem("app-transactions", JSON.stringify(initialTransactions));
+    }
+
+    setLoading(false);
   }, []);
 
   // حفظ البيانات في LocalStorage تلقائياً عند تغيير state
@@ -31,8 +38,11 @@ export const TransactionsProvider = ({ children }) => {
 
       const finalSaleObject = {
         ...saleData,
-        invoiceNumber: maxInvoiceNum + 1, // رقم الفاتورة
+        id: Date.now(), // إضافة ID فريد لكل عملية
+        date: new Date().toLocaleString(),
         type: "sale",
+        status: "open", // حالة الفاتورة عشان xreport
+        invoiceNumber: maxInvoiceNum + 1, // رقم الفاتورة
       };
 
       const updatedTransactions = [finalSaleObject, ...transactions];
@@ -54,7 +64,10 @@ export const TransactionsProvider = ({ children }) => {
       // تعديل سجل المرتجعات
       const finalReturnObject = {
         ...returnData,
+        id: Date.now(), // إضافة ID فريد لكل عملية
+        date: new Date().toLocaleString(),
         type: "return",
+        status: "open", // حالة الفاتورة عشان xreport
       };
 
       // 2. التعديل الجوهري: تحديث الكميات المسترجعة في الفاتورة الأصلية
@@ -169,6 +182,7 @@ export const TransactionsProvider = ({ children }) => {
   return (
     <TransactionsContext.Provider
       value={{
+        loading,
         transactions,
         addTransaction,
         addReturn,

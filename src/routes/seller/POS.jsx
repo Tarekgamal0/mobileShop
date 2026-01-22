@@ -77,8 +77,6 @@ export default function POS() {
   const handleFinalCheckout = () => {
     // تحضير بيانات العملية الحالية
     const saleData = {
-      id: Date.now(), // إضافة ID فريد لكل عملية
-      date: new Date().toLocaleString(),
       items: cart,
       total: totalPrice,
       paymentMethod: paymentMethod,

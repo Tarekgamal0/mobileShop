@@ -1,0 +1,101 @@
+[
+  {
+    "id": 1705910000001,
+    "invoiceNumber": 1001,
+    "date": "1/21/2026, 09:15:00 PM",
+    "customer": { "name": "ياسين عبده", "phone": "01555667788" },
+    "seller": "أحمد (المالك)",
+    "type": "sale",
+    "status": "open",
+    "paymentMethod": "cash",
+    "items": [{ "id": 13, "name": "iPad Air M2", "price": 38000, "quantity": 1 }],
+    "total": 38000
+  },
+  {
+    "id": 1705910000002,
+    "invoiceNumber": 1002,
+    "date": "1/21/2026, 11:45:00 PM",
+    "customer": { "name": "عميل نقدي", "phone": "غير مسجل" },
+    "seller": "أحمد (المالك)",
+    "type": "sale",
+    "status": "open",
+    "paymentMethod": "visa",
+    "items": [{ "id": 6, "name": "Apple Watch Series 9", "price": 22000, "quantity": 1 }],
+    "total": 22000
+  },
+  {
+    "id": 1705910000003,
+    "invoiceNumber": 1003,
+    "date": "1/22/2026, 01:20:00 AM",
+    "customer": { "name": "سارة محمود", "phone": "01122334455" },
+    "seller": "أحمد (المالك)",
+    "type": "sale",
+    "status": "open",
+    "paymentMethod": "transfer",
+    "items": [{ "id": 3, "name": "سماعة Apple Airpods Pro 2", "price": 11500, "quantity": 2 }],
+    "total": 23000
+  },
+  {
+    "id": 1705910000004,
+    "invoiceNumber": 1004,
+    "date": "1/22/2026, 03:10:00 AM",
+    "customer": { "name": "عميل نقدي", "phone": "غير مسجل" },
+    "seller": "أحمد (المالك)",
+    "type": "return",
+    "status": "open",
+    "paymentMethod": "cash",
+    "items": [{ "id": 15, "name": "كابل iPhone Original", "price": 1200, "quantity": 1 }],
+    "total": 1200
+  },
+  {
+    "id": 1705910000005,
+    "invoiceNumber": 1005,
+    "date": "1/22/2026, 04:00:00 AM",
+    "customer": { "name": "محمد علي", "phone": "01012345678" },
+    "seller": "أحمد (المالك)",
+    "type": "sale",
+    "status": "open",
+    "paymentMethod": "cash",
+    "items": [
+      { "id": 1, "name": "iPhone 15 Pro", "price": 65000, "quantity": 1 },
+      { "id": 19, "name": "جراب MagSafe iPhone 15", "price": 2500, "quantity": 1 }
+    ],
+    "total": 67500
+  },
+  {
+    "id": 1705910000006,
+    "invoiceNumber": 1006,
+    "date": "1/22/2026, 05:00:00 AM",
+    "customer": { "name": "عميل نقدي", "phone": "غير مسجل" },
+    "seller": "أحمد (المالك)",
+    "type": "sale",
+    "status": "open",
+    "paymentMethod": "visa",
+    "items": [{ "id": 8, "name": "شاحن Samsung 25W", "price": 850, "quantity": 4 }],
+    "total": 3400
+  },
+  {
+    "id": 1705910000007,
+    "invoiceNumber": 1007,
+    "date": "1/22/2026, 05:25:00 AM",
+    "customer": { "name": "كريم حسن", "phone": "01233445566" },
+    "seller": "أحمد (المالك)",
+    "type": "sale",
+    "status": "open",
+    "paymentMethod": "cash",
+    "items": [{ "id": 4, "name": "Xiaomi 13 Ultra", "price": 42000, "quantity": 1 }],
+    "total": 42000
+  },
+  {
+    "id": 1705910000008,
+    "invoiceNumber": 1008,
+    "date": "1/22/2026, 05:35:00 AM",
+    "customer": { "name": "محمد علي", "phone": "01012345678" },
+    "seller": "أحمد (المالك)",
+    "type": "return",
+    "status": "open",
+    "paymentMethod": "visa",
+    "items": [{ "id": 6, "name": "Apple Watch Series 9", "price": 22000, "quantity": 1 }],
+    "total": 22000
+  }
+]

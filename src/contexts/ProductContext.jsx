@@ -71,12 +71,11 @@ export default function ProductProvider({ children }) {
     // هنا يمكنك حفظ الفاتورة في قاعدة البيانات أو localStorage
   };
 
-  
   return (
     <ProductContext.Provider
       value={{
-        products,
         loading,
+        products,
         addProduct,
         deleteProduct,
         updateStock,
