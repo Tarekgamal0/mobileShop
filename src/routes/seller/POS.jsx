@@ -25,12 +25,12 @@ export default function POS() {
   const [customerPhone, setCustomerPhone] = useState("");
 
   const { user } = useAuth();
-  const { addTransaction } = useTransactions(); 
+  const { addTransaction } = useTransactions();
 
   const [openZReport, setOpenZReport] = useState(false);
 
   // التأكد من أن المستخدم مدير أو لديه صلاحية التقارير
-  const canCloseDay = user?.role === "owner" || user?.permissions?.includes("reports_view");
+  const canCloseDay = user?.role === "owner" || user?.permissions?.includes("z_report_view");
 
   // إضافة منتج للسلة
   const addToCart = (product) => {

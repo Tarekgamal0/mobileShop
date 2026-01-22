@@ -6,7 +6,7 @@ const ALL_PERMISSIONS = [
   { id: "returns_view", label: "المرتجعات" },
   { id: "reports_view", label: "التقارير" },
   { id: "customers_view", label: "سجل العملاء" },
-  { id: "reports-view", label: "z-report" },
+  { id: "z_report_view", label: "z-report" },
 
   { id: "inventory_edit", label: "التعديل علي محتوي المخزن" },
   { id: "transactions_return", label: "استرجاع المنتجات" },
