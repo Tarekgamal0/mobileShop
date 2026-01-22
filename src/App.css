@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+
+@media print {
+  .print-table {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}

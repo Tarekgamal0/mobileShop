@@ -13,9 +13,11 @@ import {
 } from "@mui/material";
 import { useTransactions } from "../../contexts/TransactionsContext";
 import TransactionsList from "../transactionsList";
+import { useRef } from "react";
 
 export default function ZReportDialog({ open, onClose }) {
   const { transactions, closeShift } = useTransactions(); // مصفوفة واحدة الآن تجمع النوعين
+  const printRef = useRef();
 
   // 1. تصفية البيانات لليوم الحالي فقط
   const todayDate = new Date().toLocaleDateString();
@@ -60,10 +62,21 @@ export default function ZReportDialog({ open, onClose }) {
     totalNet: stats.salesTotal - stats.returnsTotal,
   };
 
+  const handlePrint = () => {
+    const printContent = printRef.current.innerHTML;
+    const originalContent = document.body.innerHTML;
+
+    document.body.innerHTML = printContent;
+    window.print();
+    document.body.innerHTML = originalContent;
+    window.location.reload(); // لإرجاع React لحالته
+  };
+
   const handleConfirmZReport = () => {
     // ترحيل البيانات...
     console.log("التقرير النهائي لليوم:", netStats);
-    closeShift();
+    handlePrint();
+    // closeShift();
     onClose();
   };
 
@@ -74,72 +87,74 @@ export default function ZReportDialog({ open, onClose }) {
       </DialogTitle>
 
       <DialogContent sx={{ mt: 2 }}>
-        <Stack spacing={2}>
-          <Typography variant="subtitle2" color="text.secondary" align="center">
-            تاريخ التقرير: {todayDate}
-          </Typography>
-
-          <Divider>الملخص المالي</Divider>
-
-          <Box sx={{ display: "flex", justifyContent: "space-between", direction: "ltr" }}>
-            <Typography>إجمالي المبيعات:</Typography>
-            <Typography fontWeight="bold">{stats.salesTotal.toLocaleString()} ج.م</Typography>
-          </Box>
-
-          <Box sx={{ display: "flex", justifyContent: "space-between", color: "error.main", direction: "ltr" }}>
-            <Typography>إجمالي المرتجعات:</Typography>
-            <Typography fontWeight="bold">-{stats.returnsTotal.toLocaleString()} ج.م</Typography>
-          </Box>
-
-          <Divider />
-
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              bgcolor: "grey.100",
-              p: 1.5,
-              borderRadius: 1,
-              direction: "ltr",
-            }}
-          >
-            <Typography fontWeight="bold">صافي دخل اليوم:</Typography>
-            <Typography fontWeight="bold" color="primary.main">
-              {netStats.totalNet.toLocaleString()} ج.م
+        <Box ref={printRef}>
+          <Stack spacing={2}>
+            <Typography variant="subtitle2" color="text.secondary" align="center">
+              تاريخ التقرير: {todayDate}
             </Typography>
-          </Box>
 
-          <Divider>صافي المبالغ المستلمة (بالخزينة)</Divider>
+            <Divider>الملخص المالي</Divider>
 
-          <Grid container spacing={1}>
-            <Grid size={{ xs: 4 }}>
-              <Paper variant="outlined" sx={{ p: 1.5, textAlign: "center", borderColor: "success.main" }}>
-                <Typography variant="caption" color="success.main" fontWeight="bold" display="block">
-                  كاش
-                </Typography>
-                <Typography fontWeight="bold">{netStats.cash.toLocaleString()}</Typography>
-              </Paper>
-            </Grid>
-            <Grid size={{ xs: 4 }}>
-              <Paper variant="outlined" sx={{ p: 1.5, textAlign: "center", borderColor: "info.main" }}>
-                <Typography variant="caption" color="info.main" fontWeight="bold" display="block">
-                  فيزا
-                </Typography>
-                <Typography fontWeight="bold">{netStats.visa.toLocaleString()}</Typography>
-              </Paper>
-            </Grid>
-            <Grid size={{ xs: 4 }}>
-              <Paper variant="outlined" sx={{ p: 1.5, textAlign: "center", borderColor: "warning.main" }}>
-                <Typography variant="caption" color="warning.main" fontWeight="bold" display="block">
-                  تحويل
-                </Typography>
-                <Typography fontWeight="bold">{netStats.transfer.toLocaleString()}</Typography>
-              </Paper>
-            </Grid>
-          </Grid>
+            <Box sx={{ display: "flex", justifyContent: "space-between", direction: "ltr" }}>
+              <Typography>إجمالي المبيعات:</Typography>
+              <Typography fontWeight="bold">{stats.salesTotal.toLocaleString()} ج.م</Typography>
+            </Box>
 
-          <TransactionsList transactions={currentTransactions} />
-        </Stack>
+            <Box sx={{ display: "flex", justifyContent: "space-between", color: "error.main", direction: "ltr" }}>
+              <Typography>إجمالي المرتجعات:</Typography>
+              <Typography fontWeight="bold">-{stats.returnsTotal.toLocaleString()} ج.م</Typography>
+            </Box>
+
+            <Divider />
+
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                bgcolor: "grey.100",
+                p: 1.5,
+                borderRadius: 1,
+                direction: "ltr",
+              }}
+            >
+              <Typography fontWeight="bold">صافي دخل اليوم:</Typography>
+              <Typography fontWeight="bold" color="primary.main">
+                {netStats.totalNet.toLocaleString()} ج.م
+              </Typography>
+            </Box>
+
+            <Divider>صافي المبالغ المستلمة (بالخزينة)</Divider>
+
+            <Grid container spacing={1}>
+              <Grid size={{ xs: 4 }}>
+                <Paper variant="outlined" sx={{ p: 1.5, textAlign: "center", borderColor: "success.main" }}>
+                  <Typography variant="caption" color="success.main" fontWeight="bold" display="block">
+                    كاش
+                  </Typography>
+                  <Typography fontWeight="bold">{netStats.cash.toLocaleString()}</Typography>
+                </Paper>
+              </Grid>
+              <Grid size={{ xs: 4 }}>
+                <Paper variant="outlined" sx={{ p: 1.5, textAlign: "center", borderColor: "info.main" }}>
+                  <Typography variant="caption" color="info.main" fontWeight="bold" display="block">
+                    فيزا
+                  </Typography>
+                  <Typography fontWeight="bold">{netStats.visa.toLocaleString()}</Typography>
+                </Paper>
+              </Grid>
+              <Grid size={{ xs: 4 }}>
+                <Paper variant="outlined" sx={{ p: 1.5, textAlign: "center", borderColor: "warning.main" }}>
+                  <Typography variant="caption" color="warning.main" fontWeight="bold" display="block">
+                    تحويل
+                  </Typography>
+                  <Typography fontWeight="bold">{netStats.transfer.toLocaleString()}</Typography>
+                </Paper>
+              </Grid>
+            </Grid>
+
+            <TransactionsList transactions={currentTransactions} />
+          </Stack>
+        </Box>
       </DialogContent>
 
       <DialogActions sx={{ p: 2, justifyContent: "center" }}>

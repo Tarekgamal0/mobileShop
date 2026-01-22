@@ -19,7 +19,12 @@ export default function TransactionsList({ transactions }) {
           سجل العمليات التفصيلي
         </Typography>
       </Divider>
-      <TableContainer component={Paper} variant="outlined" sx={{ maxHeight: 200, overflowY: "auto" }}>
+      <TableContainer
+        component={Paper}
+        variant="outlined"
+        className="print-table"
+        sx={{ maxHeight: 200, overflowY: "auto" }}
+      >
         <Table size="small" stickyHeader sx={{ direction: "ltr" }}>
           <TableHead>
             <TableRow sx={{ bgcolor: "grey.50" }}>
