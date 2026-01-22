@@ -175,6 +175,36 @@ export const TransactionsProvider = ({ children }) => {
     saveToLocal(updatedTransactions);
     return true;
   };
+
+  const getClosedShifts = () => {
+    const shiftsMap = new Map();
+
+    transactions
+      .filter((t) => t.status === "closed")
+      .forEach((t) => {
+        // نستخدم تاريخ الإغلاق كمفتاح لتجميع العمليات التي أغلقت معاً
+        const shiftDate = t.closedAt ? t.closedAt.split(",")[0] : t.date.split(",")[0];
+
+        if (!shiftsMap.has(shiftDate)) {
+          shiftsMap.set(shiftDate, {
+            date: shiftDate,
+            totalSales: 0,
+            totalReturns: 0,
+            transactionCount: 0,
+            transactions: [],
+          });
+        }
+
+        const shift = shiftsMap.get(shiftDate);
+        shift.transactionCount += 1;
+        shift.transactions.push(t);
+        if (t.type === "sale") shift.totalSales += t.total;
+        else shift.totalReturns += t.total;
+      });
+
+    return Array.from(shiftsMap.values()).sort((a, b) => new Date(b.date) - new Date(a.date));
+  };
+
   // جلب الأرباح للوردية المفتوحة حالياً فقط (للفترة الحالية قبل التصفير)
   const getOpenShiftRevenue = () => {
     return transactions
@@ -215,9 +245,9 @@ export const TransactionsProvider = ({ children }) => {
         transactions,
         addTransaction,
         addReturn,
-        // deleteTransaction,
         getUniqueCustomers,
         closeShift,
+        getClosedShifts,
         getOpenShiftRevenue,
         getRevenueByDate,
         getAllTimeRevenue,

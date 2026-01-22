@@ -21,6 +21,7 @@ import Dashboard from "./routes/owner/Dashboard";
 import Transactions from "./routes/seller/Transactions";
 import ReturnsHistory from "./routes/seller/ReturnsHistory";
 import Profile from "./routes/seller/Profile";
+import ShiftHistory from "./routes/owner/ShiftHistory";
 
 const theme = createTheme({
   palette: {
@@ -87,6 +88,10 @@ function App() {
 
             <Route element={<ProtectedRoute requiredPermission="reports_view" />}>
               <Route path="/reports" element={<Reports />} />
+            </Route>
+
+            <Route element={<ProtectedRoute requiredPermission="shift_history_view" />}>
+              <Route path="/shift" element={<ShiftHistory />} />
             </Route>
 
             <Route element={<ProtectedRoute requiredPermission="permissions_manage" />}>
