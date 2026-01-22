@@ -48,10 +48,8 @@ export const TransactionsProvider = ({ children }) => {
   const addReturn = (returnData, adjustStockFn) => {
     try {
       // 1. إضافة المرتجع لسجل المرتجعات (كما فعلنا سابقاً)
-      const newReturn = { ...returnData, id: Date.now(), returnDate: new Date().toLocaleString() };
-
       // تعديل سجل المرتجعات
-      const updatedReturns = [newReturn, ...returns];
+      const updatedReturns = [returnData, ...returns];
       setReturns(updatedReturns);
       localStorage.setItem("app-returns", JSON.stringify(updatedReturns));
 

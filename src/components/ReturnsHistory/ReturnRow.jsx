@@ -17,10 +17,10 @@ export default function ReturnRow({ ret }) {
         </TableCell>
         <TableCell sx={{ fontWeight: "bold" }}>RET-{ret.id.toString().slice(-4)}</TableCell>
         <TableCell>#{ret.originalInvoiceNumber}</TableCell>
-        <TableCell>{ret.returnDate}</TableCell>
+        <TableCell>{ret.date}</TableCell>
         <TableCell>{ret.customerName}</TableCell>
         <TableCell align="left" sx={{ color: "error.main", fontWeight: "bold" }}>
-          {ret.totalRefunded.toLocaleString()} ج.م
+          {ret.total.toLocaleString()} ج.م
         </TableCell>
       </TableRow>
 

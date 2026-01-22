@@ -15,10 +15,12 @@ import {
   Box,
   Alert,
 } from "@mui/material";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function ReturnDialog({ open, onClose, transaction, onConfirm }) {
   // تخزين الكميات المراد إرجاعها (بشكل افتراضي 0 لكل الأصناف)
   const [returnQuantities, setReturnQuantities] = useState({});
+  const { user } = useAuth();
 
   useEffect(() => {
     if (transaction) {
@@ -50,10 +52,17 @@ export default function ReturnDialog({ open, onClose, transaction, onConfirm }) 
     const totalRefunded = itemsToReturn.reduce((sum, item) => sum + item.quantity * item.price, 0);
 
     const returnData = {
-      originalInvoiceNumber: transaction.invoiceNumber,
-      customerName: transaction.customer?.name || "عميل نقدي",
+      id: Date.now(), // إضافة ID فريد لكل عملية
+      date: new Date().toLocaleString(),
       items: itemsToReturn,
-      totalRefunded: totalRefunded,
+      total: totalRefunded,
+      paymentMethod: "cash",
+      seller: user.name || "بائع غير معروف",
+      customer: {
+        name: transaction.customerName || "عميل نقدي", // اسم افتراضي إذا لم يدخل اسم
+        phone: transaction.customerPhone || "غير مسجل",
+      },
+      InvoiceNumber: transaction.invoiceNumber,
     };
     onConfirm(returnData);
   };

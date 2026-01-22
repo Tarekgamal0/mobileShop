@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Grid, Paper, TextField, InputAdornment, Typography } from "@mui/material";
+import { Box, Grid, Paper, TextField, InputAdornment, Typography, Button, Stack } from "@mui/material";
 
 import SearchIcon from "@mui/icons-material/Search";
 import { useProducts } from "../../contexts/ProductContext";
@@ -10,6 +10,8 @@ import CustomerDialog from "../../components/POS/CustomerDialog";
 import { useAuth } from "../../contexts/AuthContext";
 import SearchField from "../../components/shared/SearchField";
 import { useTransactions } from "../../contexts/TransactionsContext";
+import SummarizeIcon from "@mui/icons-material/Summarize";
+import ZReportDialog from "../../components/POS/ZReportDialog";
 
 export default function POS() {
   const { products, adjustStock, confirmSale } = useProducts();
@@ -24,6 +26,11 @@ export default function POS() {
 
   const { user } = useAuth();
   const { addTransaction } = useTransactions(); // جلب وظيفة الإضافة
+
+  const [openZReport, setOpenZReport] = useState(false);
+
+  // التأكد من أن المستخدم مدير أو لديه صلاحية التقارير
+  const canCloseDay = user?.role === "owner" || user?.permissions?.includes("reports_view");
 
   // إضافة منتج للسلة
   const addToCart = (product) => {
@@ -72,10 +79,10 @@ export default function POS() {
     // تحضير بيانات العملية الحالية
     const saleData = {
       id: Date.now(), // إضافة ID فريد لكل عملية
+      date: new Date().toLocaleString(),
       items: cart,
       total: totalPrice,
       paymentMethod: paymentMethod,
-      date: new Date().toLocaleString(),
       seller: user.name || "بائع غير معروف",
       customer: {
         name: customerName || "عميل نقدي", // اسم افتراضي إذا لم يدخل اسم
@@ -104,9 +111,17 @@ export default function POS() {
 
   return (
     <Box sx={{ p: 3, direction: "ltr" }}>
-      <Typography variant="h4" sx={{ mb: 3, fontWeight: "bold", direction: "ltr", color: "primary.main" }}>
-        نقطة البيع
-      </Typography>
+      <Stack direction="row" justifyContent="space-between" sx={{ mb: 2 }}>
+        <Typography variant="h4" sx={{ mb: 3, fontWeight: "bold", direction: "ltr", color: "primary.main" }}>
+          نقطة البيع
+        </Typography>
+
+        {canCloseDay && (
+          <Button variant="contained" color="error" startIcon={<SummarizeIcon />} onClick={() => setOpenZReport(true)}>
+            إغلاق اليومية (Z-Report)
+          </Button>
+        )}
+      </Stack>
       <SearchField
         placeholder="ابحث عن موديل أو ماركة..."
         value={searchQuery}
@@ -141,6 +156,7 @@ export default function POS() {
         customerPhone={customerPhone}
         setCustomerPhone={setCustomerPhone}
       />
+      <ZReportDialog open={openZReport} onClose={() => setOpenZReport(false)} />
     </Box>
   );
 }
