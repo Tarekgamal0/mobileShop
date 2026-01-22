@@ -110,7 +110,7 @@ export default function ZReportDialog({ open, onClose }) {
           <Divider>صافي المبالغ المستلمة (بالخزينة)</Divider>
 
           <Grid container spacing={1}>
-            <Grid item xs={4}>
+            <Grid size={{ xs: 4 }}>
               <Paper variant="outlined" sx={{ p: 1.5, textAlign: "center", borderColor: "success.main" }}>
                 <Typography variant="caption" color="success.main" fontWeight="bold" display="block">
                   كاش
@@ -118,7 +118,7 @@ export default function ZReportDialog({ open, onClose }) {
                 <Typography fontWeight="bold">{netStats.cash.toLocaleString()}</Typography>
               </Paper>
             </Grid>
-            <Grid item xs={4}>
+            <Grid size={{ xs: 4 }}>
               <Paper variant="outlined" sx={{ p: 1.5, textAlign: "center", borderColor: "info.main" }}>
                 <Typography variant="caption" color="info.main" fontWeight="bold" display="block">
                   فيزا
@@ -126,7 +126,7 @@ export default function ZReportDialog({ open, onClose }) {
                 <Typography fontWeight="bold">{netStats.visa.toLocaleString()}</Typography>
               </Paper>
             </Grid>
-            <Grid item xs={4}>
+            <Grid size={{ xs: 4 }}>
               <Paper variant="outlined" sx={{ p: 1.5, textAlign: "center", borderColor: "warning.main" }}>
                 <Typography variant="caption" color="warning.main" fontWeight="bold" display="block">
                   تحويل
