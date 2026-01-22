@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Box,
   Typography,
@@ -9,13 +9,10 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
-  InputAdornment,
   Avatar,
   Stack,
   Chip,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import PersonIcon from "@mui/icons-material/Person";
 import PhoneIcon from "@mui/icons-material/Phone";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
@@ -26,8 +23,8 @@ export default function Customers() {
   const { getUniqueCustomers } = useTransactions();
   const [searchTerm, setSearchTerm] = useState("");
 
-  // جلب بيانات العملاء من الـ Context
-  const customers = getUniqueCustomers();
+  // استخدام useMemo لتحسين الأداء عند البحث
+  const customers = useMemo(() => getUniqueCustomers(), [getUniqueCustomers]);
 
   // فلترة العملاء بناءً على الاسم أو رقم التليفون
   const filteredCustomers = customers.filter(
@@ -36,66 +33,119 @@ export default function Customers() {
 
   return (
     <Box sx={{ p: 4, direction: "rtl" }}>
-      {/* العنوان وإحصائية سريعة */}
-      <Typography variant="h4" sx={{ mb: 3, fontWeight: "bold", direction: "ltr", color: "primary.main" }}>
-        قائمة العملاء
-      </Typography>
+      {/* Header مع عرض إجمالي عدد العملاء */}
+      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 4 }}>
+        <Typography variant="h4" sx={{ fontWeight: "bold", color: "primary.main" }}>
+          قائمة العملاء
+        </Typography>
+        <Chip
+          label={`إجمالي العملاء: ${customers.length}`}
+          color="primary"
+          variant="outlined"
+          sx={{ fontWeight: "bold" }}
+        />
+      </Stack>
+
       {/* شريط البحث */}
-      <SearchField
-        placeholder="ابحث باسم العميل أو رقم التليفون..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+      <Box sx={{ mb: 3 }}>
+        <SearchField
+          placeholder="ابحث باسم العميل أو رقم التليفون..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </Box>
+
       {/* جدول العملاء */}
       <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: 3, direction: "ltr" }}>
-        <Table>
-          <TableHead sx={{ bgcolor: "#f5f5f5" }}>
+        <Table sx={{ minWidth: 650 }}>
+          <TableHead sx={{ bgcolor: "grey.100" }}>
             <TableRow>
-              <TableCell>العميل</TableCell>
-              <TableCell>رقم التليفون</TableCell>
-              <TableCell align="center">عدد المعاملات</TableCell>
-              <TableCell align="center">إجمالي المشتريات</TableCell>
-              <TableCell>تاريخ آخر عملية</TableCell>
+              <TableCell align="left" sx={{ fontWeight: "bold" }}>
+                العميل
+              </TableCell>
+              <TableCell align="left" sx={{ fontWeight: "bold" }}>
+                رقم التليفون
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                عدد العمليات
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                إجمالي المشتريات (+)
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                إجمالي المسترجع (-)
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                الصافي النهائي
+              </TableCell>
+              <TableCell align="left" sx={{ fontWeight: "bold" }}>
+                تاريخ آخر عملية
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {filteredCustomers.length > 0 ? (
               filteredCustomers.map((customer, index) => (
-                <TableRow key={index} hover>
-                  <TableCell>
+                <TableRow key={index} hover sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                  <TableCell align="left">
                     <Stack direction="row" spacing={2} alignItems="center">
-                      <Avatar sx={{ bgcolor: "secondary.main" }}>
-                        <PersonIcon />
+                      <Avatar sx={{ bgcolor: "primary.light", width: 35, height: 35 }}>
+                        <PersonIcon fontSize="small" />
                       </Avatar>
-                      <Typography fontWeight="medium">{customer.name}</Typography>
+                      <Typography variant="body2" fontWeight="bold">
+                        {customer.name}
+                      </Typography>
                     </Stack>
                   </TableCell>
-                  <TableCell>
+
+                  <TableCell align="left">
                     <Stack direction="row" spacing={1} alignItems="center">
-                      <PhoneIcon fontSize="small" color="action" />
-                      <Typography>{customer.phone}</Typography>
+                      <PhoneIcon fontSize="inherit" color="action" />
+                      <Typography variant="body2">{customer.phone}</Typography>
                     </Stack>
                   </TableCell>
+
                   <TableCell align="center">
                     <Chip
-                      icon={<ShoppingBagIcon sx={{ fontSize: "14px !important" }} />}
+                      icon={<ShoppingBagIcon style={{ fontSize: "14px" }} />}
                       label={customer.transactionsCount}
                       size="small"
                       variant="outlined"
                     />
                   </TableCell>
-                  <TableCell align="center" sx={{ fontWeight: "bold", color: "success.main" }}>
-                    {customer.totalSpent.toLocaleString()} ج.م
+
+                  {/* إجمالي المشتريات باللون الأخضر */}
+                  <TableCell align="center">
+                    <Typography variant="body2" color="success.main" fontWeight="medium">
+                      {customer.totalSales.toLocaleString()} ج.م
+                    </Typography>
                   </TableCell>
-                  <TableCell color="text.secondary">
-                    {customer.lastPurchase.split(",")[0]} {/* عرض التاريخ بدون الوقت */}
+
+                  {/* إجمالي المرتجعات باللون الأحمر */}
+                  <TableCell align="center">
+                    <Typography variant="body2" color="error.main" fontWeight="medium">
+                      {customer.totalReturns.toLocaleString()} ج.م
+                    </Typography>
+                  </TableCell>
+
+                  {/* الصافي بلون مميز */}
+                  <TableCell align="center">
+                    <Typography variant="body1" fontWeight="bold" color="primary.main">
+                      {(customer.totalSales - customer.totalReturns).toLocaleString()} ج.م
+                    </Typography>
+                  </TableCell>
+
+                  <TableCell align="left">
+                    <Typography variant="caption" color="text.secondary">
+                      {customer.lastPurchase?.split(",")[0] || "---"}
+                    </Typography>
                   </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={5} align="center" sx={{ py: 8 }}>
-                  <Typography color="text.secondary">لا يوجد عملاء مطابقين للبحث</Typography>
+                <TableCell colSpan={5} align="center" sx={{ py: 10 }}>
+                  <Typography color="text.secondary">لا يوجد عملاء مطابقين للبحث حالياً</Typography>
                 </TableCell>
               </TableRow>
             )}

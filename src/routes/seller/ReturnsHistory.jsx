@@ -14,8 +14,8 @@ import ReturnRow from "../../components/ReturnsHistory/ReturnRow";
 
 // هيكل مقترح لصفحة المرتجعات
 export default function ReturnsHistory() {
-  const { returns } = useTransactions();
-
+  const { transactions } = useTransactions();
+  const returns = transactions.filter((t) => t.type === "return");
   return (
     <Box sx={{ p: 4 }}>
       <Typography variant="h4" sx={{ mb: 3, fontWeight: "bold", direction: "ltr", color: "primary.main" }}>

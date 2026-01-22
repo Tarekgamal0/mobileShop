@@ -16,9 +16,9 @@ export default function ReturnRow({ ret }) {
           </IconButton>
         </TableCell>
         <TableCell sx={{ fontWeight: "bold" }}>RET-{ret.id.toString().slice(-4)}</TableCell>
-        <TableCell>#{ret.originalInvoiceNumber}</TableCell>
+        <TableCell>#{ret.InvoiceNumber}</TableCell>
         <TableCell>{ret.date}</TableCell>
-        <TableCell>{ret.customerName}</TableCell>
+        <TableCell>{ret.customer.name}</TableCell>
         <TableCell align="left" sx={{ color: "error.main", fontWeight: "bold" }}>
           {ret.total.toLocaleString()} ج.م
         </TableCell>

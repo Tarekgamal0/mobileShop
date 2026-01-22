@@ -25,7 +25,7 @@ export default function POS() {
   const [customerPhone, setCustomerPhone] = useState("");
 
   const { user } = useAuth();
-  const { addTransaction } = useTransactions(); // جلب وظيفة الإضافة
+  const { addTransaction } = useTransactions(); 
 
   const [openZReport, setOpenZReport] = useState(false);
 

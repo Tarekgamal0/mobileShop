@@ -59,8 +59,8 @@ export default function ReturnDialog({ open, onClose, transaction, onConfirm }) 
       paymentMethod: "cash",
       seller: user.name || "بائع غير معروف",
       customer: {
-        name: transaction.customerName || "عميل نقدي", // اسم افتراضي إذا لم يدخل اسم
-        phone: transaction.customerPhone || "غير مسجل",
+        name: transaction.customer.name || "عميل نقدي", // اسم افتراضي إذا لم يدخل اسم
+        phone: transaction.customer.phone || "غير مسجل",
       },
       InvoiceNumber: transaction.invoiceNumber,
     };

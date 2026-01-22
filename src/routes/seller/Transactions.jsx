@@ -12,11 +12,12 @@ export default function Transactions() {
 
   const { user } = useAuth();
 
+  const saleTransactions = transactions.filter((t) => t.type === "sale");
   // فحص صلاحية الاسترجاع
   const canReturn = user?.role === "owner" || user?.permissions?.includes("transactions_return");
 
   // فلترة العمليات بناءً على اسم العميل، البائع، أو التاريخ
-  const filteredTransactions = transactions.filter(
+  const filteredTransactions = saleTransactions.filter(
     (t) =>
       t.invoiceNumber.toString().includes(searchTerm) ||
       t.customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
