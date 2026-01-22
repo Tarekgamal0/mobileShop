@@ -29,9 +29,9 @@ export default function XReportDialog({ open, onClose }) {
   }, [transactions]);
 
   // 2. حالة التاريخ المختار (افتراضياً تاريخ اليوم إذا وجد)
-  const todayStr = new Date().toLocaleDateString();
+  const todayDateStr = new Date().toLocaleDateString();
   const [selectedDate, setSelectedDate] = useState(
-    availableDates.includes(todayStr) ? todayStr : availableDates[0] || "",
+    availableDates.includes(todayDateStr) ? todayDateStr : availableDates[0] || "",
   );
 
   // 3. فلترة الحركات بناءً على التاريخ المختار
@@ -90,7 +90,7 @@ export default function XReportDialog({ open, onClose }) {
           >
             {availableDates.map((date) => (
               <MenuItem key={date} value={date}>
-                {date === todayStr ? `اليوم - ${date}` : date}
+                {date === todayDateStr ? `اليوم - ${date}` : date}
               </MenuItem>
             ))}
             {availableDates.length === 0 && <MenuItem disabled>لا توجد بيانات</MenuItem>}
