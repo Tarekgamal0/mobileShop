@@ -11,11 +11,16 @@ import {
 } from "@mui/material";
 import { useTransactions } from "../../contexts/TransactionsContext";
 import ReturnRow from "../../components/ReturnsHistory/ReturnRow";
+import { useMemo } from "react";
 
 // هيكل مقترح لصفحة المرتجعات
 export default function ReturnsHistory() {
   const { transactions } = useTransactions();
-  const returns = transactions.filter((t) => t.type === "return");
+
+  const returnTransactions = useMemo(() => {
+    return transactions.filter((t) => t.type === "return");
+  }, [transactions]);
+
   return (
     <Box sx={{ p: 4 }}>
       <Typography variant="h4" sx={{ mb: 3, fontWeight: "bold", direction: "ltr", color: "primary.main" }}>
@@ -34,8 +39,8 @@ export default function ReturnsHistory() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {returns.length > 0 ? (
-              returns.map((ret) => <ReturnRow key={ret.id} ret={ret} />)
+            {returnTransactions.length > 0 ? (
+              returnTransactions.map((ret) => <ReturnRow key={ret.id} ret={ret} />)
             ) : (
               <TableRow>
                 <TableCell colSpan={6} align="center" sx={{ py: 5 }}>

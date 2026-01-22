@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Box, Typography } from "@mui/material";
 
 import SearchField from "../../components/shared/SearchField";
@@ -11,19 +11,23 @@ export default function Transactions() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const { user } = useAuth();
-
-  const saleTransactions = transactions.filter((t) => t.type === "sale");
   // فحص صلاحية الاسترجاع
   const canReturn = user?.role === "owner" || user?.permissions?.includes("transactions_return");
 
+  const saleTransactions = useMemo(() => {
+    return transactions.filter((t) => t.type === "sale");
+  }, [transactions]);
+
   // فلترة العمليات بناءً على اسم العميل، البائع، أو التاريخ
-  const filteredTransactions = saleTransactions.filter(
-    (t) =>
-      t.invoiceNumber.toString().includes(searchTerm) ||
-      t.customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      t.seller.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      t.date.includes(searchTerm),
-  );
+  const filteredTransactions = useMemo(() => {
+    return saleTransactions.filter(
+      (t) =>
+        t.invoiceNumber.toString().includes(searchTerm) ||
+        t.customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        t.seller.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        t.date.includes(searchTerm),
+    );
+  }, [saleTransactions, searchTerm]);
 
   return (
     <Box sx={{ p: 3, direction: "rtl" }}>

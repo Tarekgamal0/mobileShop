@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Box, Grid, Paper, TextField, InputAdornment, Typography, Button, Stack } from "@mui/material";
 
 import SearchIcon from "@mui/icons-material/Search";
@@ -103,8 +103,13 @@ export default function POS() {
   };
 
   // حساب الإجمالي الكلي وعدد القطع
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalItems = useMemo(() => {
+    return cart.reduce((sum, item) => sum + item.quantity, 0);
+  }, [cart]);
+
+  const totalPrice = useMemo(() => {
+    return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  }, [cart]);
 
   return (
     <Box sx={{ p: 3, direction: "ltr" }}>

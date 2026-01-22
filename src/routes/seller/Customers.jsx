@@ -27,9 +27,11 @@ export default function Customers() {
   const customers = useMemo(() => getUniqueCustomers(), [getUniqueCustomers]);
 
   // فلترة العملاء بناءً على الاسم أو رقم التليفون
-  const filteredCustomers = customers.filter(
-    (c) => c.name.toLowerCase().includes(searchTerm.toLowerCase()) || c.phone.includes(searchTerm),
-  );
+  const filteredCustomers = useMemo(() => {
+    return customers.filter(
+      (c) => c.name.toLowerCase().includes(searchTerm.toLowerCase()) || c.phone.includes(searchTerm),
+    );
+  }, [customers, searchTerm]);
 
   return (
     <Box sx={{ p: 4, direction: "rtl" }}>

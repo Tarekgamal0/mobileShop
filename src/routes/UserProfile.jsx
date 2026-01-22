@@ -1,11 +1,12 @@
+import { useAuth } from "../contexts/AuthContext";
 import { useUsers } from "../contexts/UserContext";
 import { Card, CardContent, Typography, Avatar, Box } from "@mui/material";
 
 export default function UserProfile({ userId }) {
-  const { getUserById } = useUsers();
+  const { user } = useAuth();
 
-  // استدعاء الدالة لجلب المستخدم
-  const user = getUserById(userId);
+  // const { getUserById } = useUsers();
+  // const user = getUserById(userId);
 
   if (!user) return <Typography>المستخدم غير موجود</Typography>;
 
