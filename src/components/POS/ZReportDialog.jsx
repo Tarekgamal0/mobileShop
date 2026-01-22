@@ -12,6 +12,7 @@ import {
   Paper,
 } from "@mui/material";
 import { useTransactions } from "../../contexts/TransactionsContext";
+import TransactionsList from "../transactionsList";
 
 export default function ZReportDialog({ open, onClose }) {
   const { transactions } = useTransactions(); // مصفوفة واحدة الآن تجمع النوعين
@@ -81,7 +82,7 @@ export default function ZReportDialog({ open, onClose }) {
 
           <Box sx={{ display: "flex", justifyContent: "space-between", direction: "ltr" }}>
             <Typography>إجمالي المبيعات:</Typography>
-            <Typography fontWeight="bold">+{stats.salesTotal.toLocaleString()} ج.م</Typography>
+            <Typography fontWeight="bold">{stats.salesTotal.toLocaleString()} ج.م</Typography>
           </Box>
 
           <Box sx={{ display: "flex", justifyContent: "space-between", color: "error.main", direction: "ltr" }}>
@@ -135,6 +136,8 @@ export default function ZReportDialog({ open, onClose }) {
               </Paper>
             </Grid>
           </Grid>
+
+          <TransactionsList transactions={todayTransactions} />
         </Stack>
       </DialogContent>
 
