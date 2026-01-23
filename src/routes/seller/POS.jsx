@@ -11,7 +11,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import SearchField from "../../components/shared/SearchField";
 import { useTransactions } from "../../contexts/TransactionsContext";
 import SummarizeIcon from "@mui/icons-material/Summarize";
-import ZReportDialog from "../../components/POS/ZReportDialog";
+import ReportDialog from "../../components/shared/ReportDialog";
 
 export default function POS() {
   const { products, adjustStock, confirmSale } = useProducts();
@@ -25,7 +25,7 @@ export default function POS() {
   const [customerPhone, setCustomerPhone] = useState("");
 
   const { user } = useAuth();
-  const { addTransaction } = useTransactions();
+  const { addTransaction, closeShift } = useTransactions();
 
   const [openZReport, setOpenZReport] = useState(false);
   // التأكد من أن المستخدم مدير أو لديه صلاحية التقارير
@@ -102,6 +102,11 @@ export default function POS() {
     }
   };
 
+  const handleConfirmZReport = () => {
+    // ترحيل البيانات...
+    closeShift();
+  };
+
   // حساب الإجمالي الكلي وعدد القطع
   const totalItems = useMemo(() => {
     return cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -158,7 +163,12 @@ export default function POS() {
         customerPhone={customerPhone}
         setCustomerPhone={setCustomerPhone}
       />
-      <ZReportDialog open={openZReport} onClose={() => setOpenZReport(false)} />
+      <ReportDialog
+        open={openZReport}
+        onClose={() => setOpenZReport(false)}
+        handleConfirm={handleConfirmZReport}
+        type={"Z"}
+      />
     </Box>
   );
 }

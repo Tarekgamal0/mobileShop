@@ -1,8 +1,8 @@
 import { useState } from "react";
-import XReportDialog from "../../components/Dashboard/XReportDialog";
 import { useTransactions } from "../../contexts/TransactionsContext";
 import { Box, Button } from "@mui/material";
 import AssessmentIcon from "@mui/icons-material/Assessment";
+import ReportDialog from "../../components/shared/ReportDialog";
 
 export default function Dashboard() {
   const { getUniqueCustomers, getAllTimeRevenue } = useTransactions();
@@ -18,8 +18,7 @@ export default function Dashboard() {
         عرض تقرير X
       </Button>
 
-      {/* استدعاء الـ Dialog */}
-      <XReportDialog open={openXReport} onClose={() => setOpenXReport(false)} />
+      <ReportDialog open={openXReport} onClose={() => setOpenXReport(false)} type={"X"} />
     </Box>
   );
 }
