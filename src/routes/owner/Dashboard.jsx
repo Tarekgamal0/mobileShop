@@ -1,19 +1,6 @@
 import { useState, useMemo } from "react";
 import { useTransactions } from "../../contexts/TransactionsContext";
-import {
-  Box,
-  Typography,
-  Paper,
-  IconButton,
-  Stack,
-  Divider,
-  Tooltip,
-  Grid,
-  Avatar,
-  List,
-  ListItem,
-  ListItemText,
-} from "@mui/material";
+import { Box, Typography, Grid } from "@mui/material";
 import {
   Assessment as AssessmentIcon,
   Print as PrintIcon,
@@ -124,10 +111,10 @@ export default function Dashboard() {
           {/* ترتيب المنتجات */}
           <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid size={{ xs: 12, md: 6 }}>
-              <ProductRankingList title="الأكثر مبيعاً" data={stats.topSales} color="success.main" />
+              <ProductRankingList title="الأكثر مبيعاً" data={stats.topSales} color="success.main" iconType="star" />
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
-              <ProductRankingList title="الأكثر إرجاعاً" data={stats.topReturns} color="error.main" />
+              <ProductRankingList title="الأكثر إرجاعاً" data={stats.topReturns} color="error.main" iconType="return" />
             </Grid>
           </Grid>
         </Grid>

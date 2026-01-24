@@ -20,13 +20,18 @@ export default function Transactions() {
 
   // فلترة العمليات بناءً على اسم العميل، البائع، أو التاريخ
   const filteredTransactions = useMemo(() => {
-    return saleTransactions.filter(
-      (t) =>
-        t.invoiceNumber.toString().includes(searchTerm) ||
-        t.customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        t.seller.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        t.date.includes(searchTerm),
-    );
+    const term = searchTerm.toLowerCase();
+    return saleTransactions.filter((t) => {
+      // تحويل القيم إلى نصوص بأمان لتجنب الأخطاء إذا كانت القيمة null أو undefined
+      const invoiceNo = t.invoiceNumber?.toString() || "";
+      const customerName = t.customer?.name?.toLowerCase() || "عميل نقدي";
+      const sellerName = t.seller?.toLowerCase() || "";
+      const dateStr = t.date || "";
+
+      return (
+        invoiceNo.includes(term) || customerName.includes(term) || sellerName.includes(term) || dateStr.includes(term)
+      );
+    });
   }, [saleTransactions, searchTerm]);
 
   return (

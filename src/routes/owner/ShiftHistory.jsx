@@ -4,15 +4,24 @@ import HistoryIcon from "@mui/icons-material/History";
 import PrintIcon from "@mui/icons-material/Print";
 import { useTransactions } from "../../contexts/TransactionsContext";
 import ReportDialog from "../../components/shared/ReportDialog";
+import SearchField from "../../components/shared/SearchField";
 
 export default function ShiftHistory() {
   const { getClosedShifts } = useTransactions();
   const closedShifts = useMemo(() => getClosedShifts(), [getClosedShifts]);
 
   const [selectedShift, setSelectedShift] = useState(null);
+  const [tempShiftData, setTempShiftData] = useState(null);
+
+  //منطق البحث (تصفية الورديات بالتاريخ أو الوقت)
+  const [searchTerm, setSearchTerm] = useState(""); // حالة نص البحث
+  const filteredShifts = useMemo(() => {
+    if (!searchTerm) return closedShifts;
+    const term = searchTerm.toLowerCase();
+    return closedShifts.filter((shift) => shift.date.includes(term));
+  }, [closedShifts, searchTerm]);
 
   // <--- حالة إضافية للاحتفاظ بالبيانات أثناء حركة الإغلاق --->
-  const [tempShiftData, setTempShiftData] = useState(null);
   useEffect(() => {
     // إذا تم اختيار شيفت، نحدث البيانات المؤقتة فوراً
     if (selectedShift) {
@@ -30,14 +39,15 @@ export default function ShiftHistory() {
           سجل الورديات المغلقة
         </Typography>
       </Stack>
+      <SearchField placeholder="ابحث بالتاريخ..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
 
-      {closedShifts.length === 0 ? (
+      {filteredShifts.length === 0 ? (
         <Paper sx={{ p: 5, textAlign: "center", bgcolor: "grey.50" }}>
           <Typography color="text.secondary">لا توجد ورديات مغلقة حتى الآن.</Typography>
         </Paper>
       ) : (
         <Grid container spacing={3}>
-          {closedShifts.map((shift, index) => (
+          {filteredShifts.map((shift, index) => (
             <Grid size={{ xs: 12, md: 6, lg: 4 }} key={index}>
               <Paper elevation={3} sx={{ p: 2, borderRadius: 2, borderTop: "5px solid", borderColor: "primary.main" }}>
                 <MenuItem key={shift.shiftId} value={shift.shiftId}>

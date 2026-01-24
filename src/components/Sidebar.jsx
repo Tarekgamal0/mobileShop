@@ -51,7 +51,7 @@ export default function Sidebar() {
     { text: "المخزن", icon: <Inventory />, path: "/inventory", permission: "inventory_view" },
     { text: "الورديات المغلقة", icon: <History />, path: "/shift", permission: "shift_history_view" },
     { text: "سجل العملاء", icon: <People />, path: "/customers", permission: "customers_view" },
-    { text: "التقارير", icon: <Assessment />, path: "/reports", permission: "reports_view" },
+    // { text: "التقارير", icon: <Assessment />, path: "/reports", permission: "reports_view" },
     { text: "صلاحيات المستخدمين", icon: <PersonAddAltIcon />, path: "/permissions", permission: "permissions_manage" },
   ];
   return (

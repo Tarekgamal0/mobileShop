@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Box, Typography, Paper, Chip, Stack, IconButton, Tooltip, Button } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useProducts } from "../../contexts/ProductContext";
@@ -11,11 +11,13 @@ import AddProductDialog from "../../components/InventoryMangement/AddProductDial
 import EditProductDialog from "../../components/InventoryMangement/EditProductDialog";
 import DeleteProductDialog from "../../components/InventoryMangement/DeleteProductDialog";
 import { useAuth } from "../../contexts/AuthContext";
+import SearchField from "../../components/shared/SearchField";
 
 export default function Inventory() {
   const { products, loading, deleteProduct, updateStock, addProduct, updateProduct } = useProducts();
 
   const { user } = useAuth();
+
   // فحص الصلاحيات (نفترض أن الأكواد هي inventory_edit و inventory_delete)
   const canEdit = user?.role === "owner" || user?.permissions?.includes("inventory_edit");
 
@@ -26,6 +28,14 @@ export default function Inventory() {
 
   // المنتج المختار للتعديل أو الحذف
   const [selectedProduct, setSelectedProduct] = useState(null);
+
+  // --- منطق تصفية المنتجات (Search Logic) ---
+  const [searchTerm, setSearchTerm] = useState("");
+  const filteredProducts = useMemo(() => {
+    if (!searchTerm) return products;
+    const term = searchTerm.toLowerCase();
+    return products.filter((p) => p.name?.toLowerCase().includes(term) || p.brand?.toLowerCase().includes(term));
+  }, [products, searchTerm]);
 
   // --- دوال التحكم ---
 
@@ -155,19 +165,37 @@ export default function Inventory() {
         {canEdit && (
           <Button
             variant="contained"
-            startIcon={<AddCircleIcon />}
+            size="large" // تكبير الحجم الافتراضي
+            startIcon={<AddCircleIcon sx={{ fontSize: "24px !important" }} />} // تكبير الأيقونة
             onClick={() => setOpenAdd(true)}
-            sx={{ borderRadius: 2 }}
+            sx={{
+              borderRadius: 3,
+              px: 4, // زيادة المسافة الأفقية داخل الزر
+              py: 1.5, // زيادة المسافة الرأسية
+              fontSize: "1.1rem", // تكبير حجم الخط
+              fontWeight: "bold",
+              boxShadow: 3, // إضافة ظل لإعطاء عمق
+              "&:hover": {
+                boxShadow: 5,
+                transform: "scale(1.02)", // تأثير حركة بسيط عند المرور بالماوس
+              },
+              transition: "all 0.2s",
+            }}
           >
             إضافة منتج جديد
           </Button>
         )}
       </Box>
+      <SearchField
+        placeholder="ابحث باسم الموديل أو الماركة..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
 
       {/* DataGrid Section */}
       <Paper sx={{ height: 650, width: "100%", borderRadius: 2, overflow: "hidden" }}>
         <DataGrid
-          rows={products}
+          rows={filteredProducts}
           columns={columns}
           loading={loading}
           columnVisibilityModel={{

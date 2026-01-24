@@ -1,11 +1,16 @@
 import { List, ListItem, ListItemText, Paper, Typography, Box } from "@mui/material";
-import { Star as StarIcon } from "@mui/icons-material";
+import { Star as StarIcon, AssignmentReturn as ReturnIcon, TrendingDown as DownIcon } from "@mui/icons-material";
 
-export default function ProductRankingList({ title, data, color }) {
+export default function ProductRankingList({ title, data, color, iconType }) {
+  // تحديد الأيقونة بناءً على النوع
+  const Icon = iconType === "return" ? ReturnIcon : StarIcon;
+
   return (
     <Paper sx={{ p: 2, borderRadius: 3, height: "100%" }}>
       <Typography variant="subtitle2" fontWeight="bold" sx={{ mb: 1.5, display: "flex", alignItems: "center", gap: 1 }}>
-        <StarIcon sx={{ color: "gold", fontSize: 18 }} /> {title}
+        {/* تغيير اللون والأيقونة */}
+        <Icon sx={{ color: color === "error.main" ? "#d32f2f" : "gold", fontSize: 18 }} />
+        {title}
       </Typography>
 
       <List
