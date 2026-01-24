@@ -242,6 +242,63 @@ export const TransactionsProvider = ({ children }) => {
     }));
   };
 
+  const getDashboardStats = () => {
+    const now = new Date();
+
+    // تواريخ مرجعية
+    const startOfDay = new Date(now.setHours(0, 0, 0, 0));
+    const startOfWeek = new Date(now.setDate(now.getDate() - 7));
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    let stats = {
+      revenue: { daily: 0, weekly: 0, monthly: 0 },
+      returns: { daily: 0, weekly: 0, monthly: 0 },
+      productSales: {},
+      productReturns: {},
+      totalCustomers: new Set(),
+      newWeeklyCustomers: new Set(),
+    };
+
+    transactions.forEach((t) => {
+      const tDate = new Date(t.date);
+      const isSale = t.type === "sale";
+      const amount = t.total || 0;
+      const phone = t.customer?.phone;
+
+      // 1. حساب الأرباح (صافي المبيعات) والمرتجعات
+      if (tDate >= startOfDay) {
+        isSale ? (stats.revenue.daily += amount) : (stats.returns.daily += amount);
+      }
+      if (tDate >= startOfWeek) {
+        isSale ? (stats.revenue.weekly += amount) : (stats.returns.weekly += amount);
+        if (phone && phone !== "غير مسجل") stats.newWeeklyCustomers.add(phone);
+      }
+      if (tDate >= startOfMonth) {
+        isSale ? (stats.revenue.monthly += amount) : (stats.returns.monthly += amount);
+      }
+
+      // 2. إحصائيات العملاء
+      if (phone && phone !== "غير مسجل") stats.totalCustomers.add(phone);
+
+      // 3. تحليل المنتجات
+      t.items.forEach((item) => {
+        const targetMap = isSale ? stats.productSales : stats.productReturns;
+        targetMap[item.name] = (targetMap[item.name] || 0) + (item.quantity || 1);
+      });
+    });
+
+    // ترتيب المنتجات (أفضل 5)
+    const topSales = Object.entries(stats.productSales)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10);
+
+    const topReturns = Object.entries(stats.productReturns)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10);
+
+    return { ...stats, topSales, topReturns };
+  };
+
   return (
     <TransactionsContext.Provider
       value={{
@@ -255,6 +312,7 @@ export const TransactionsProvider = ({ children }) => {
         getOpenShiftRevenue,
         getRevenueByDate,
         getAllTimeRevenue,
+        getDashboardStats,
       }}
     >
       {children}
