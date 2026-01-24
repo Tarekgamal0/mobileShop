@@ -17,6 +17,7 @@ import { useTransactions } from "../../contexts/TransactionsContext";
 import TransactionsList from "../transactionsList";
 import { useMemo, useRef, useState } from "react";
 import PrintIcon from "@mui/icons-material/Print";
+import { printDirectly } from "../../services/printService"; // استيراد الخدمة
 
 export default function ReportDialog({ open, onClose, handleConfirm, type, data, title }) {
   // <-------- Shared ----------->
@@ -76,14 +77,12 @@ export default function ReportDialog({ open, onClose, handleConfirm, type, data,
 
   // <-------- الوظائف -------->
   const handlePrint = () => {
-    const printContent = printRef.current.innerHTML;
-    const originalContent = document.body.innerHTML;
-
-    document.body.innerHTML = printContent;
-    window.print();
-    document.body.innerHTML = originalContent;
-    window.location.reload(); // لإرجاع React لحالته
+    if (printRef.current) {
+      const content = printRef.current.innerHTML;
+      printDirectly(content); // استخدام الخدمة الجديدة
+    }
   };
+
   const finalHandleConfirm = () => {
     // ترحيل البيانات...
     handleConfirm?.();
