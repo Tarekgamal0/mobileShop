@@ -1,12 +1,26 @@
-import React from "react";
-import { Box, Typography, Grid, Paper, Divider, Stack, Button, Chip } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, Typography, Grid, Paper, Divider, Stack, Button, Chip, MenuItem } from "@mui/material";
 import HistoryIcon from "@mui/icons-material/History";
 import PrintIcon from "@mui/icons-material/Print";
 import { useTransactions } from "../../contexts/TransactionsContext";
+import ReportDialog from "../../components/shared/ReportDialog";
 
 export default function ShiftHistory() {
   const { getClosedShifts } = useTransactions();
-  const closedShifts = getClosedShifts();
+  const closedShifts = useMemo(() => getClosedShifts(), [getClosedShifts]);
+
+  const [selectedShift, setSelectedShift] = useState(null);
+
+  // <--- حالة إضافية للاحتفاظ بالبيانات أثناء حركة الإغلاق --->
+  const [tempShiftData, setTempShiftData] = useState(null);
+  useEffect(() => {
+    // إذا تم اختيار شيفت، نحدث البيانات المؤقتة فوراً
+    if (selectedShift) {
+      setTempShiftData(selectedShift);
+    }
+    // لا نقوم بتصفير tempShiftData هنا عند الإغلاق
+    // بل نتركه يحمل آخر قيمة حتى يختفي الديلوج تماماً
+  }, [selectedShift]);
 
   return (
     <Box sx={{ p: 4, direction: "ltr" }}>
@@ -26,15 +40,20 @@ export default function ShiftHistory() {
           {closedShifts.map((shift, index) => (
             <Grid size={{ xs: 12, md: 6, lg: 4 }} key={index}>
               <Paper elevation={3} sx={{ p: 2, borderRadius: 2, borderTop: "5px solid", borderColor: "primary.main" }}>
-                <Stack direction="row" justifyContent="space-between" sx={{ mb: 2 }}>
-                  <Typography variant="h6" fontWeight="bold">
-                    {shift.date}
-                  </Typography>
-                  <Chip label={`${shift.transactionCount} عملية`} size="small" variant="outlined" />
-                </Stack>
+                <MenuItem key={shift.shiftId} value={shift.shiftId}>
+                  <Stack direction="row" spacing={1} justifyContent="space-between" sx={{ width: "100%" }}>
+                    <Typography variant="body2" fontWeight="bold">
+                      وردية: {shift.time}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {shift.date} | ({shift.transactionCount} عملية)
+                    </Typography>
+                  </Stack>
+                </MenuItem>
 
                 <Divider sx={{ mb: 2 }} />
 
+                {/* تفاصيل المبالغ */}
                 <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
                   <Typography variant="body2" color="text.secondary">
                     إجمالي المبيعات:
@@ -64,7 +83,7 @@ export default function ShiftHistory() {
                     color: "white",
                   }}
                 >
-                  <Typography variant="body1">الصافي المحقق:</Typography>
+                  <Typography variant="body1">الصافي :</Typography>
                   <Typography variant="body1" fontWeight="bold">
                     {(shift.totalSales - shift.totalReturns).toLocaleString()} ج.م
                   </Typography>
@@ -73,17 +92,23 @@ export default function ShiftHistory() {
                 <Button
                   fullWidth
                   variant="outlined"
-                  startIcon={<PrintIcon />}
                   sx={{ mt: 2 }}
-                  onClick={() => window.print()} // يمكن تخصيصها لطباعة تقرير محدد
+                  onClick={() => setSelectedShift(shift)} // يمكن تخصيصها لطباعة تقرير محدد
                 >
-                  إعادة طباعة التقرير
+                  عرض التقرير التفصيلي
                 </Button>
               </Paper>
             </Grid>
           ))}
         </Grid>
       )}
+      <ReportDialog
+        open={Boolean(selectedShift)}
+        onClose={() => setSelectedShift(null)}
+        type="HISTORY" // نوع لعرض السجل
+        data={tempShiftData?.transactions} // نرسل عمليات هذا الشيفت فقط
+        title={`تقرير وردية ( ${tempShiftData?.time || ""} ) - بتاريخ ( ${tempShiftData?.date || ""} )`}
+      />
     </Box>
   );
 }

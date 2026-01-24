@@ -182,12 +182,16 @@ export const TransactionsProvider = ({ children }) => {
     transactions
       .filter((t) => t.status === "closed")
       .forEach((t) => {
-        // نستخدم تاريخ الإغلاق كمفتاح لتجميع العمليات التي أغلقت معاً
-        const shiftDate = t.closedAt ? t.closedAt.split(",")[0] : t.date.split(",")[0];
+        // نستخدم t.closedAt كمفتاح فريد (Timestamp) لأنه يمثل لحظة إغلاق الوردية بالدقيقة والثانية
+        // إذا لم يتوفر، نستخدم t.date كبديل احتياطي
+        const shiftKey = t.closedAt || t.date;
 
-        if (!shiftsMap.has(shiftDate)) {
-          shiftsMap.set(shiftDate, {
-            date: shiftDate,
+        // لو الشيفت مش في الماب و لسة جديد
+        if (!shiftsMap.has(shiftKey)) {
+          shiftsMap.set(shiftKey, {
+            shiftId: shiftKey, // معرف فريد للوردية
+            date: t.closedAt ? t.closedAt.split(",")[0] : t.date.split(",")[0], // تاريخ اليوم للعرض فقط
+            time: t.closedAt ? t.closedAt.split(",")[1] : "", // وقت الإغلاق للفصل بين ورديات اليوم
             totalSales: 0,
             totalReturns: 0,
             transactionCount: 0,
@@ -195,11 +199,11 @@ export const TransactionsProvider = ({ children }) => {
           });
         }
 
-        const shift = shiftsMap.get(shiftDate);
+        const shift = shiftsMap.get(shiftKey);
         shift.transactionCount += 1;
         shift.transactions.push(t);
-        if (t.type === "sale") shift.totalSales += t.total;
-        else shift.totalReturns += t.total;
+        if (t.type === "sale") shift.totalSales += t.total || 0;
+        else shift.totalReturns += t.total || 0;
       });
 
     return Array.from(shiftsMap.values()).sort((a, b) => new Date(b.date) - new Date(a.date));

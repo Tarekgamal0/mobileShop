@@ -16,11 +16,14 @@ import {
 import { useTransactions } from "../../contexts/TransactionsContext";
 import TransactionsList from "../transactionsList";
 import { useMemo, useRef, useState } from "react";
+import PrintIcon from "@mui/icons-material/Print";
 
-export default function ReportDialog({ open, onClose, handleConfirm, type }) {
+export default function ReportDialog({ open, onClose, handleConfirm, type, data, title }) {
   // <-------- Shared ----------->
   const { transactions } = useTransactions(); // مصفوفة واحدة الآن تجمع النوعين
   const printRef = useRef();
+  const isZReport = type === "Z";
+  const isXReport = type === "X";
 
   // <-------- التواريخ والحالة -------->
   const todayDate = useMemo(() => new Date().toLocaleDateString(), []);
@@ -36,53 +39,40 @@ export default function ReportDialog({ open, onClose, handleConfirm, type }) {
 
   // <-------- الفلترة والحسابات -------->
   const { filteredTransactions, stats, netStats } = useMemo(() => {
-    // 1. الفلترة
-    const filtered = transactions.filter((t) =>
-      type === "Z" ? t.status === "open" : t.date.split(",")[0] === selectedDate,
-    );
+    // 1. تحديد البيانات المصدر
+    const filtered =
+      data || transactions.filter((t) => (isZReport ? t.status === "open" : t.date.split(",")[0] === selectedDate));
 
     // 2. الحسابات في دورة واحدة
-    const calculatedStats = filtered.reduce(
-      (acc, curr) => {
-        const amount = curr.total || 0;
-        const method = curr.paymentMethod;
-
-        if (curr.type === "sale") {
-          acc.salesTotal += amount;
-          if (method === "cash") acc.cashSales += amount;
-          if (method === "visa") acc.visaSales += amount;
-          if (method === "transfer") acc.transferSales += amount;
-        } else if (curr.type === "return") {
-          acc.returnsTotal += amount;
-          if (method === "cash") acc.cashReturns += amount;
-          if (method === "visa") acc.visaReturns += amount;
-          if (method === "transfer") acc.transferReturns += amount;
-        }
-        return acc;
-      },
-      {
-        salesTotal: 0,
-        cashSales: 0,
-        visaSales: 0,
-        transferSales: 0,
-        returnsTotal: 0,
-        cashReturns: 0,
-        visaReturns: 0,
-        transferReturns: 0,
-      },
-    );
-    const calculatedNetStats = {
-      cash: calculatedStats.cashSales - calculatedStats.cashReturns,
-      visa: calculatedStats.visaSales - calculatedStats.visaReturns,
-      transfer: calculatedStats.transferSales - calculatedStats.transferReturns,
-      totalNet: calculatedStats.salesTotal - calculatedStats.returnsTotal,
+    const initialStats = {
+      salesTotal: 0,
+      returnsTotal: 0,
+      methods: { cash: 0, visa: 0, transfer: 0 },
     };
+    const calculatedStats = filtered.reduce((acc, curr) => {
+      const amount = curr.total || 0;
+      const method = curr.paymentMethod;
+      const isSale = curr.type === "sale";
+
+      if (isSale) {
+        acc.salesTotal += amount;
+        if (acc.methods.hasOwnProperty(method)) acc.methods[method] += amount;
+      } else {
+        acc.returnsTotal += amount;
+        if (acc.methods.hasOwnProperty(method)) acc.methods[method] -= amount;
+      }
+      return acc;
+    }, initialStats);
+
     return {
       filteredTransactions: filtered,
       stats: calculatedStats,
-      netStats: calculatedNetStats,
+      netStats: {
+        ...calculatedStats.methods,
+        totalNet: calculatedStats.salesTotal - calculatedStats.returnsTotal,
+      },
     };
-  }, [transactions, selectedDate, type]);
+  }, [transactions, selectedDate, type, data]);
 
   // <-------- الوظائف -------->
   const handlePrint = () => {
@@ -100,46 +90,45 @@ export default function ReportDialog({ open, onClose, handleConfirm, type }) {
     handlePrint();
     onClose();
   };
-  const isZReport = type === "Z";
+
+  // إعدادات المظهر بناءً على النوع
+  const config = {
+    Z: { color: "error.main", label: "تقرير إغلاق الوردية (Z-Report)" },
+    X: { color: "primary.main", label: "تقرير مراجعة (X-Report)" },
+    HISTORY: { color: "success.main", label: title || "سجل الوردية" },
+  };
+
+  const currentConfig = config[type] || config.X;
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth disableRestoreFocus>
-      <DialogTitle sx={{ textAlign: "center", fontWeight: "bold", bgcolor: "error.main", color: "white" }}>
-        {type === "Z" ? "تقرير إغلاق الوردية (Z-Report)" : "تقرير مراجعة (X-Report)"}
+      <DialogTitle sx={{ textAlign: "center", fontWeight: "bold", bgcolor: currentConfig.color, color: "white" }}>
+        {currentConfig.label}
       </DialogTitle>
 
       <DialogContent sx={{ mt: 2 }}>
         <Box ref={printRef}>
           <Stack spacing={2}>
-            {isZReport ? (
-              <Typography variant="subtitle2" color="text.secondary" align="center">
-                تاريخ التقرير: {todayDate}
-              </Typography>
-            ) : (
+            {isXReport ? (
               <TextField
                 select
                 fullWidth
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
                 variant="outlined"
-                size="medium" // حجم أكبر للوضوح
-                slotProps={{
-                  input: {
-                    sx: {
-                      borderRadius: 2,
-                      bgcolor: "white",
-                      direction: "ltr",
-                    },
-                  },
-                }}
+                size="small"
+                sx={{ direction: "ltr" }}
               >
                 {availableDates.map((date) => (
                   <MenuItem key={date} value={date}>
                     {date === todayDate ? `اليوم - ${date}` : date}
                   </MenuItem>
                 ))}
-                {availableDates.length === 0 && <MenuItem disabled>لا توجد بيانات</MenuItem>}
               </TextField>
+            ) : (
+              <Typography variant="subtitle2" color="text.secondary" align="center" fontWeight="bold">
+                {isZReport ? `تاريخ التقرير: ${todayDate}` : title}
+              </Typography>
             )}
 
             <Divider>الملخص المالي</Divider>
@@ -210,9 +199,16 @@ export default function ReportDialog({ open, onClose, handleConfirm, type }) {
         <Button onClick={onClose} color="inherit">
           إلغاء
         </Button>
-        <Button onClick={finalHandleConfirm} variant="contained" color="error" size="large" fullWidth>
-          تأكيد الإغلاق والترحيل
-          {type === "Z" ? "تأكيد الإغلاق والترحيل" : "طباعة التقرير"}
+        <Button
+          variant="contained"
+          size="large"
+          fullWidth
+          startIcon={<PrintIcon />}
+          color={isZReport ? "error" : "primary"}
+          sx={{ direction: "ltr" }}
+          onClick={finalHandleConfirm}
+        >
+          {isZReport ? "تأكيد الإغلاق والترحيل" : "طباعة التقرير"}
         </Button>
       </DialogActions>
     </Dialog>

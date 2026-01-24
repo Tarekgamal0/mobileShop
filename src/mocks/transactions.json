@@ -7,6 +7,7 @@
     "seller": "أحمد (المالك)",
     "type": "sale",
     "status": "closed",
+    "closedAt": "1/21/2026, 10:32:23 PM",
     "paymentMethod": "cash",
     "items": [{ "id": 13, "name": "iPad Air M2", "price": 38000, "quantity": 1 }],
     "total": 38000
@@ -19,6 +20,7 @@
     "seller": "أحمد (المالك)",
     "type": "sale",
     "status": "closed",
+    "closedAt": "1/21/2026, 10:32:23 PM",
     "paymentMethod": "visa",
     "items": [{ "id": 6, "name": "Apple Watch Series 9", "price": 22000, "quantity": 1 }],
     "total": 22000
