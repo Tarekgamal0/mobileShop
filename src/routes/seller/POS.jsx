@@ -125,7 +125,7 @@ export default function POS() {
 
         {canCloseDay && (
           <Button variant="contained" color="error" startIcon={<SummarizeIcon />} onClick={() => setOpenZReport(true)}>
-            إغلاق اليومية (Z-Report)
+            إغلاق الوردية (Z-Report)
           </Button>
         )}
       </Stack>
