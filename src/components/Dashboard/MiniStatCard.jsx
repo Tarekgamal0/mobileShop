@@ -1,5 +1,5 @@
 import { Avatar, Box, Paper, Stack, Typography } from "@mui/material";
-
+import { formatDate, formatCurrency } from "../../utils/formatters";
 export default function MiniStatCard({ title, value, icon, color }) {
   return (
     <Paper sx={{ p: 2, borderRadius: 3, border: "1px solid #eee" }}>
@@ -10,7 +10,7 @@ export default function MiniStatCard({ title, value, icon, color }) {
             {title}
           </Typography>
           <Typography variant="h6" fontWeight="bold">
-            {value.toLocaleString()} ج.م
+            {formatCurrency(value)}
           </Typography>
         </Box>
       </Stack>

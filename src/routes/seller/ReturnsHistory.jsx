@@ -13,6 +13,7 @@ import { useTransactions } from "../../contexts/TransactionsContext";
 import ReturnRow from "../../components/ReturnsHistory/ReturnRow";
 import { useMemo, useState } from "react";
 import SearchField from "../../components/shared/SearchField";
+import { formatDate } from "../../utils/formatters";
 
 // هيكل مقترح لصفحة المرتجعات
 export default function ReturnsHistory() {
@@ -30,7 +31,7 @@ export default function ReturnsHistory() {
       const invoiceNo = t.invoiceNumber?.toString() || "";
       const customerName = t.customer?.name?.toLowerCase() || "عميل نقدي";
       const sellerName = t.seller?.toLowerCase() || "";
-      const dateStr = t.date || "";
+      const dateStr = formatDate(t.date) || "";
 
       return (
         invoiceNo.includes(term) || customerName.includes(term) || sellerName.includes(term) || dateStr.includes(term)

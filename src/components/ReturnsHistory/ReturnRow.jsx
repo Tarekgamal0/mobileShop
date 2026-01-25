@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography, Collapse, IconButton } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { formatDate, formatCurrency } from "../../utils/formatters";
 
 // مكون الصف المنفصل لإدارة حالة الفتح والغلق لكل عملية مرتجع
 export default function ReturnRow({ ret }) {
@@ -17,10 +18,10 @@ export default function ReturnRow({ ret }) {
         </TableCell>
         <TableCell sx={{ fontWeight: "bold" }}>RET-{ret.id.toString().slice(-4)}</TableCell>
         <TableCell>#{ret.InvoiceNumber}</TableCell>
-        <TableCell>{ret.date}</TableCell>
+        <TableCell>{formatDate(ret.date)}</TableCell>
         <TableCell>{ret.customer.name}</TableCell>
         <TableCell align="left" sx={{ color: "error.main", fontWeight: "bold" }}>
-          {ret.total.toLocaleString()} ج.م
+          {formatCurrency(ret.total)}
         </TableCell>
       </TableRow>
 
@@ -46,8 +47,8 @@ export default function ReturnRow({ ret }) {
                     <TableRow key={item.id}>
                       <TableCell>{item.name}</TableCell>
                       <TableCell align="center">{item.quantity}</TableCell>
-                      <TableCell align="right">{item.price.toLocaleString()} ج.م</TableCell>
-                      <TableCell align="right">{(item.quantity * item.price).toLocaleString()} ج.م</TableCell>
+                      <TableCell align="right">{formatCurrency(item.price)}</TableCell>
+                      <TableCell align="right">{formatCurrency(item.quantity * item.price)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

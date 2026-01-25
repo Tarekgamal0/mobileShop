@@ -5,7 +5,7 @@ import SearchField from "../../components/shared/SearchField";
 import TransactionTable from "../../components/Transactions/TransactionTable";
 import { useTransactions } from "../../contexts/TransactionsContext";
 import { useAuth } from "../../contexts/AuthContext";
-
+import { formatDate } from "../../utils/formatters";
 export default function Transactions() {
   const { transactions } = useTransactions();
   const [searchTerm, setSearchTerm] = useState("");
@@ -26,7 +26,7 @@ export default function Transactions() {
       const invoiceNo = t.invoiceNumber?.toString() || "";
       const customerName = t.customer?.name?.toLowerCase() || "عميل نقدي";
       const sellerName = t.seller?.toLowerCase() || "";
-      const dateStr = t.date || "";
+      const dateStr = formatDate(t.date) || "";
 
       return (
         invoiceNo.includes(term) || customerName.includes(term) || sellerName.includes(term) || dateStr.includes(term)

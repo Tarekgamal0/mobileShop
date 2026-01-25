@@ -12,6 +12,7 @@ import EditProductDialog from "../../components/InventoryMangement/EditProductDi
 import DeleteProductDialog from "../../components/InventoryMangement/DeleteProductDialog";
 import { useAuth } from "../../contexts/AuthContext";
 import SearchField from "../../components/shared/SearchField";
+import { formatDate, formatCurrency } from "../../utils/formatters";
 
 export default function Inventory() {
   const { products, loading, deleteProduct, updateStock, addProduct, updateProduct } = useProducts();
@@ -88,7 +89,7 @@ export default function Inventory() {
       renderCell: (params) => (
         <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", width: "100%" }}>
           <Typography color="primary.main" fontWeight="bold">
-            {params.value?.toLocaleString()} ج.م
+            {formatCurrency(params.value)}
           </Typography>
         </Box>
       ),

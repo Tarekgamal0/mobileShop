@@ -18,6 +18,7 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import { useTransactions } from "../../contexts/TransactionsContext";
 import SearchField from "../../components/shared/SearchField";
+import { formatDate, formatCurrency } from "../../utils/formatters";
 
 export default function Customers() {
   const { getUniqueCustomers } = useTransactions();
@@ -119,21 +120,21 @@ export default function Customers() {
                   {/* إجمالي المشتريات باللون الأخضر */}
                   <TableCell align="center">
                     <Typography variant="body2" color="success.main" fontWeight="medium">
-                      {customer.totalSales.toLocaleString()} ج.م
+                      {formatCurrency(customer.totalSales)}
                     </Typography>
                   </TableCell>
 
                   {/* إجمالي المرتجعات باللون الأحمر */}
                   <TableCell align="center">
                     <Typography variant="body2" color="error.main" fontWeight="medium">
-                      {customer.totalReturns.toLocaleString()} ج.م
+                      {formatCurrency(customer.totalSales)}
                     </Typography>
                   </TableCell>
 
                   {/* الصافي بلون مميز */}
                   <TableCell align="center">
                     <Typography variant="body1" fontWeight="bold" color="primary.main">
-                      {(customer.totalSales - customer.totalReturns).toLocaleString()} ج.م
+                      {formatCurrency(customer.totalSales - customer.totalReturns)}
                     </Typography>
                   </TableCell>
 

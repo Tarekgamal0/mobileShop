@@ -5,6 +5,7 @@ import PrintIcon from "@mui/icons-material/Print";
 import { useTransactions } from "../../contexts/TransactionsContext";
 import ReportDialog from "../../components/shared/ReportDialog";
 import SearchField from "../../components/shared/SearchField";
+import { formatDate, formatCurrency, formatDateTime } from "../../utils/formatters";
 
 export default function ShiftHistory() {
   const { getClosedShifts } = useTransactions();
@@ -14,12 +15,19 @@ export default function ShiftHistory() {
   const [tempShiftData, setTempShiftData] = useState(null);
 
   //منطق البحث (تصفية الورديات بالتاريخ أو الوقت)
-  const [searchTerm, setSearchTerm] = useState(""); // حالة نص البحث
+  const [searchDate, setSearchDate] = useState(""); // حالة نص البحث
   const filteredShifts = useMemo(() => {
-    if (!searchTerm) return closedShifts;
-    const term = searchTerm.toLowerCase();
-    return closedShifts.filter((shift) => shift.date.includes(term));
-  }, [closedShifts, searchTerm]);
+    // 1. إذا كان البحث فارغاً، عد بالكل فوراً
+    if (!searchDate) return closedShifts;
+
+    // 2. تحويل نص البحث إلى حروف صغيرة (لضمان الدقة إذا كان هناك وقت)
+    const term = searchDate.toLowerCase().trim();
+
+    return closedShifts.filter((shift) => {
+      const formattedShiftDate = formatDate(shift.date);
+      return formattedShiftDate.includes(term);
+    });
+  }, [closedShifts, searchDate]);
 
   // <--- حالة إضافية للاحتفاظ بالبيانات أثناء حركة الإغلاق --->
   useEffect(() => {
@@ -39,7 +47,7 @@ export default function ShiftHistory() {
           سجل الورديات المغلقة
         </Typography>
       </Stack>
-      <SearchField placeholder="ابحث بالتاريخ..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+      <SearchField placeholder="ابحث بالتاريخ..." value={searchDate} onChange={(e) => setSearchDate(e.target.value)} />
 
       {filteredShifts.length === 0 ? (
         <Paper sx={{ p: 5, textAlign: "center", bgcolor: "grey.50" }}>
@@ -55,8 +63,8 @@ export default function ShiftHistory() {
                     <Typography variant="body2" fontWeight="bold">
                       وردية: {shift.time}
                     </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      {shift.date} | ({shift.transactionCount} عملية)
+                    <Typography variant="caption" color="text.secondary" fontWeight="bold">
+                      {formatDate(shift.date)} | ({shift.transactionCount} عملية)
                     </Typography>
                   </Stack>
                 </MenuItem>
@@ -69,7 +77,7 @@ export default function ShiftHistory() {
                     إجمالي المبيعات:
                   </Typography>
                   <Typography variant="body2" fontWeight="bold" color="success.main">
-                    +{shift.totalSales.toLocaleString()} ج.م
+                    +{formatCurrency(shift.totalSales)}
                   </Typography>
                 </Box>
 
@@ -78,7 +86,7 @@ export default function ShiftHistory() {
                     إجمالي المرتجعات:
                   </Typography>
                   <Typography variant="body2" fontWeight="bold" color="error.main">
-                    -{shift.totalReturns.toLocaleString()} ج.م
+                    -{formatCurrency(shift.totalReturns)}
                   </Typography>
                 </Box>
 
@@ -95,7 +103,7 @@ export default function ShiftHistory() {
                 >
                   <Typography variant="body1">الصافي :</Typography>
                   <Typography variant="body1" fontWeight="bold">
-                    {(shift.totalSales - shift.totalReturns).toLocaleString()} ج.م
+                    {formatCurrency(shift.totalSales - shift.totalReturns)}
                   </Typography>
                 </Box>
 
@@ -117,7 +125,7 @@ export default function ShiftHistory() {
         onClose={() => setSelectedShift(null)}
         type="HISTORY" // نوع لعرض السجل
         data={tempShiftData?.transactions} // نرسل عمليات هذا الشيفت فقط
-        title={`تقرير وردية ( ${tempShiftData?.time || ""} ) - بتاريخ ( ${tempShiftData?.date || ""} )`}
+        title={`تقرير وردية ( ${tempShiftData?.time || ""} ) - بتاريخ ( ${formatDate(tempShiftData?.date) || ""} )`}
       />
     </Box>
   );

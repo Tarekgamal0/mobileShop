@@ -16,6 +16,7 @@ import {
   Alert,
 } from "@mui/material";
 import { useAuth } from "../../contexts/AuthContext";
+import { formatDate, formatCurrency } from "../../utils/formatters";
 
 export default function ReturnDialog({ open, onClose, transaction, onConfirm }) {
   // تخزين الكميات المراد إرجاعها (بشكل افتراضي 0 لكل الأصناف)
@@ -116,19 +117,19 @@ export default function ReturnDialog({ open, onClose, transaction, onConfirm }) 
                       disabled={remainingQty <= 0}
                       value={returnQuantities[item.id] || 0}
                       onChange={(e) => handleQtyChange(item.id, e.target.value, remainingQty)}
-                      inputProps={{
-                        style: { textAlign: "center" },
-                        min: 0,
-                        max: remainingQty, // الحد الأقصى هو المتبقي فقط
+                      slotProps={{
+                        input: {
+                          style: { textAlign: "center" },
+                          min: 0,
+                          max: remainingQty,
+                        },
                       }}
                       helperText={remainingQty <= 0 ? "مسترجع بالكامل" : ""}
                       sx={{ width: "100px" }}
                     />
                   </TableCell>
-                  <TableCell align="right">{item.price} ج.م</TableCell>
-                  <TableCell align="right">
-                    {((returnQuantities[item.id] || 0) * item.price).toLocaleString()} ج.م
-                  </TableCell>
+                  <TableCell align="right">{formatCurrency(item.price)}</TableCell>
+                  <TableCell align="right">{formatCurrency((returnQuantities[item.id] || 0) * item.price)}</TableCell>
                 </TableRow>
               );
             })}
@@ -139,10 +140,9 @@ export default function ReturnDialog({ open, onClose, transaction, onConfirm }) 
                 إجمالي المبلغ المسترد للعميل في هذه العملية:
               </TableCell>
               <TableCell align="right" sx={{ fontWeight: "bold", fontSize: "1.1rem", color: "error.main" }}>
-                {transaction?.items
-                  .reduce((sum, item) => sum + (returnQuantities[item.id] || 0) * item.price, 0)
-                  .toLocaleString()}{" "}
-                ج.م
+                {formatCurrency(
+                  transaction?.items.reduce((sum, item) => sum + (returnQuantities[item.id] || 0) * item.price, 0),
+                )}
               </TableCell>
             </TableRow>
           </TableBody>

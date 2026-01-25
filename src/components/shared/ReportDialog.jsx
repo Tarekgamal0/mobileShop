@@ -15,9 +15,11 @@ import {
 } from "@mui/material";
 import { useTransactions } from "../../contexts/TransactionsContext";
 import TransactionsList from "../transactionsList";
+
 import { useMemo, useRef, useState } from "react";
 import PrintIcon from "@mui/icons-material/Print";
 import { printDirectly } from "../../services/printService"; // استيراد الخدمة
+import { formatDate, getRawToday, formatCurrency } from "../../utils/formatters";
 
 export default function ReportDialog({ open, onClose, handleConfirm, type, data, title }) {
   // <-------- Shared ----------->
@@ -27,6 +29,7 @@ export default function ReportDialog({ open, onClose, handleConfirm, type, data,
   const isXReport = type === "X";
 
   // <-------- التواريخ والحالة -------->
+  const todayRawDate = useMemo(() => getRawToday(), []);
   const todayDate = useMemo(() => new Date().toLocaleDateString(), []);
 
   const availableDates = useMemo(() => {
@@ -134,12 +137,12 @@ export default function ReportDialog({ open, onClose, handleConfirm, type, data,
 
             <Box sx={{ display: "flex", justifyContent: "space-between", direction: "ltr" }}>
               <Typography>إجمالي المبيعات:</Typography>
-              <Typography fontWeight="bold">{stats.salesTotal.toLocaleString()} ج.م</Typography>
+              <Typography fontWeight="bold">{formatCurrency(stats.salesTotal)}</Typography>
             </Box>
 
             <Box sx={{ display: "flex", justifyContent: "space-between", color: "error.main", direction: "ltr" }}>
               <Typography>إجمالي المرتجعات:</Typography>
-              <Typography fontWeight="bold">-{stats.returnsTotal.toLocaleString()} ج.م</Typography>
+              <Typography fontWeight="bold">-{formatCurrency(stats.returnsTotal)}</Typography>
             </Box>
 
             <Divider />
@@ -156,7 +159,7 @@ export default function ReportDialog({ open, onClose, handleConfirm, type, data,
             >
               <Typography fontWeight="bold">صافي دخل اليوم:</Typography>
               <Typography fontWeight="bold" color="primary.main">
-                {netStats.totalNet.toLocaleString()} ج.م
+                {formatCurrency(netStats.totalNet)}
               </Typography>
             </Box>
 

@@ -1,6 +1,7 @@
 import { Grid, Paper, Typography, Button, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { formatDate, formatCurrency } from "../../utils/formatters";
 
 export default function ProductList({ products, searchQuery, onAddToCart }) {
   const uniqueCategories = [...new Set(products.map((p) => p.category))];
@@ -32,7 +33,7 @@ export default function ProductList({ products, searchQuery, onAddToCart }) {
                       <Typography variant="body1" fontWeight="bold">
                         {product.name}
                       </Typography>
-                      <Typography color="primary">{product.price.toLocaleString()} ج.م</Typography>
+                      <Typography color="primary">{formatCurrency(product.price)}</Typography>
                       <Typography variant="caption" display="block">
                         المخزن: {product.stock}
                       </Typography>

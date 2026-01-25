@@ -15,6 +15,7 @@ import MiniStatCard from "../../components/Dashboard/MiniStatCard";
 import ProductRankingList from "../../components/Dashboard/ProductRankingList";
 import InfoCard from "../../components/Dashboard/InfoCard";
 import ShiftSummaryCard from "../../components/Dashboard/ShiftSummaryCard";
+import { formatDate, formatCurrency } from "../../utils/formatters";
 
 export default function Dashboard() {
   const { transactions, getDashboardStats } = useTransactions();
@@ -101,7 +102,7 @@ export default function Dashboard() {
             <Grid size={{ xs: 12, md: 6 }}>
               <InfoCard
                 title="مرتجعات الشهر الحالي"
-                value={`${stats.returns.monthly.toLocaleString()} ج.م`}
+                value={formatCurrency(stats.returns.monthly)}
                 icon={<ReturnIcon />}
                 iconColor="#d32f2f" // لون أحمر
               />

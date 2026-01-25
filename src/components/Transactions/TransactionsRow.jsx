@@ -21,6 +21,7 @@ import ReturnDialog from "./ReturnDialog";
 import { useTransactions } from "../../contexts/TransactionsContext";
 import { useProducts } from "../../contexts/ProductContext";
 import UndoIcon from "@mui/icons-material/Undo";
+import { formatDate, formatCurrency } from "../../utils/formatters";
 
 export default function TransactionRow({ transaction, canReturn }) {
   const [open, setOpen] = useState(false);
@@ -49,7 +50,7 @@ export default function TransactionRow({ transaction, canReturn }) {
             #{transaction.invoiceNumber || "---"}
           </Typography>
         </TableCell>
-        <TableCell>{transaction.date}</TableCell>
+        <TableCell>{formatDate(transaction.date)}</TableCell>
         <TableCell sx={{ fontWeight: "bold" }}>{transaction.seller}</TableCell>
         <TableCell>{transaction.customer?.name}</TableCell>
         <TableCell>
@@ -78,7 +79,7 @@ export default function TransactionRow({ transaction, canReturn }) {
           />
         </TableCell>
         <TableCell align="left" sx={{ fontWeight: "bold", color: "primary.main" }}>
-          {transaction.total?.toLocaleString()} ج.م
+          {formatCurrency(transaction.total)}
         </TableCell>
         {canReturn && (
           <TableCell align="center">
@@ -116,8 +117,8 @@ export default function TransactionRow({ transaction, canReturn }) {
                     <TableRow key={item.id}>
                       <TableCell>{item.name}</TableCell>
                       <TableCell>{item.quantity}</TableCell>
-                      <TableCell>{item.price?.toLocaleString()} ج.م</TableCell>
-                      <TableCell align="right">{(item.quantity * item.price).toLocaleString()} ج.م</TableCell>
+                      <TableCell>{formatCurrency(item.price)}</TableCell>
+                      <TableCell align="right">{formatCurrency(item.quantity * item.price)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
