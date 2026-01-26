@@ -29,7 +29,7 @@ export default function ProductProvider({ children }) {
   // إضافة منتج جديد
   const addProduct = (product) => {
     const newProduct = { ...product, id: Date.now() };
-    setProducts([...products, newProduct]);
+    setProducts([newProduct, ...products]);
   };
 
   // حذف منتج

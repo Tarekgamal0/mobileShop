@@ -4,6 +4,8 @@
     "name": "iPhone 15 Pro",
     "brand": "Apple",
     "category": "موبايلات",
+    "originalPrice": 65000,
+    "discount": 0,
     "price": 65000,
     "stock": 10,
     "minStock": 3
@@ -13,6 +15,8 @@
     "name": "Galaxy S23 Ultra",
     "brand": "Samsung",
     "category": "موبايلات",
+    "originalPrice": 52000,
+    "discount": 0,
     "price": 52000,
     "stock": 2,
     "minStock": 5
@@ -22,6 +26,8 @@
     "name": "سماعة Apple Airpods Pro 2",
     "brand": "Apple",
     "category": "إكسسوارات",
+    "originalPrice": 11500,
+    "discount": 0,
     "price": 11500,
     "stock": 15,
     "minStock": 5
@@ -31,6 +37,8 @@
     "name": "Xiaomi 13 Ultra",
     "brand": "Xiaomi",
     "category": "موبايلات",
+    "originalPrice": 42000,
+    "discount": 0,
     "price": 42000,
     "stock": 4,
     "minStock": 2
@@ -40,6 +48,8 @@
     "name": "Google Pixel 8 Pro",
     "brand": "Google",
     "category": "موبايلات",
+    "originalPrice": 48000,
+    "discount": 0,
     "price": 48000,
     "stock": 6,
     "minStock": 3
@@ -49,6 +59,8 @@
     "name": "Apple Watch Series 9",
     "brand": "Apple",
     "category": "ساعات ذكية",
+    "originalPrice": 22000,
+    "discount": 0,
     "price": 22000,
     "stock": 8,
     "minStock": 4
@@ -58,6 +70,8 @@
     "name": "Galaxy Watch 6 Classic",
     "brand": "Samsung",
     "category": "ساعات ذكية",
+    "originalPrice": 14000,
+    "discount": 0,
     "price": 14000,
     "stock": 1,
     "minStock": 3
@@ -67,6 +81,8 @@
     "name": "شاحن Samsung 25W",
     "brand": "Samsung",
     "category": "إكسسوارات",
+    "originalPrice": 850,
+    "discount": 0,
     "price": 850,
     "stock": 50,
     "minStock": 10
@@ -76,6 +92,8 @@
     "name": "Realme 11 Pro+",
     "brand": "Realme",
     "category": "موبايلات",
+    "originalPrice": 18500,
+    "discount": 0,
     "price": 18500,
     "stock": 12,
     "minStock": 5
@@ -85,6 +103,8 @@
     "name": "Oppo Reno 10 Pro",
     "brand": "Oppo",
     "category": "موبايلات",
+    "originalPrice": 21000,
+    "discount": 0,
     "price": 21000,
     "stock": 0,
     "minStock": 2
@@ -94,6 +114,8 @@
     "name": "Huawei Mate 60 Pro",
     "brand": "Huawei",
     "category": "موبايلات",
+    "originalPrice": 55000,
+    "discount": 0,
     "price": 55000,
     "stock": 3,
     "minStock": 2
@@ -103,16 +125,30 @@
     "name": "سماعة Sony WH-1000XM5",
     "brand": "Sony",
     "category": "إكسسوارات",
+    "originalPrice": 19500,
+    "discount": 0,
     "price": 19500,
     "stock": 7,
     "minStock": 2
   },
-  { "id": 13, "name": "iPad Air M2", "brand": "Apple", "category": "تابلت", "price": 38000, "stock": 5, "minStock": 2 },
+  {
+    "id": 13,
+    "name": "iPad Air M2",
+    "brand": "Apple",
+    "category": "تابلت",
+    "originalPrice": 38000,
+    "discount": 0,
+    "price": 38000,
+    "stock": 5,
+    "minStock": 2
+  },
   {
     "id": 14,
     "name": "Galaxy Tab S9 Plus",
     "brand": "Samsung",
     "category": "تابلت",
+    "originalPrice": 34000,
+    "discount": 0,
     "price": 34000,
     "stock": 4,
     "minStock": 2
@@ -122,6 +158,8 @@
     "name": "كابل iPhone Original",
     "brand": "Apple",
     "category": "إكسسوارات",
+    "originalPrice": 1200,
+    "discount": 0,
     "price": 1200,
     "stock": 100,
     "minStock": 20
@@ -131,6 +169,8 @@
     "name": "OnePlus 11",
     "brand": "OnePlus",
     "category": "موبايلات",
+    "originalPrice": 32000,
+    "discount": 0,
     "price": 32000,
     "stock": 9,
     "minStock": 3
@@ -140,6 +180,8 @@
     "name": "ساعة Xiaomi Watch S1",
     "brand": "Xiaomi",
     "category": "ساعات ذكية",
+    "originalPrice": 6500,
+    "discount": 0,
     "price": 6500,
     "stock": 20,
     "minStock": 5
@@ -149,6 +191,8 @@
     "name": "Nothing Phone (2)",
     "brand": "Nothing",
     "category": "موبايلات",
+    "originalPrice": 28000,
+    "discount": 0,
     "price": 28000,
     "stock": 5,
     "minStock": 2
@@ -158,6 +202,8 @@
     "name": "جراب MagSafe iPhone 15",
     "brand": "Apple",
     "category": "إكسسوارات",
+    "originalPrice": 2500,
+    "discount": 0,
     "price": 2500,
     "stock": 30,
     "minStock": 10
@@ -167,6 +213,8 @@
     "name": "Redmi Note 12",
     "brand": "Xiaomi",
     "category": "موبايلات",
+    "originalPrice": 9500,
+    "discount": 0,
     "price": 9500,
     "stock": 18,
     "minStock": 10

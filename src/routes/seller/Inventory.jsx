@@ -7,15 +7,15 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 // استيراد المكونات الجديدة (تأكد من صحة المسار حسب مجلداتك)
-import AddProductDialog from "../../components/InventoryMangement/AddProductDialog";
-import EditProductDialog from "../../components/InventoryMangement/EditProductDialog";
-import DeleteProductDialog from "../../components/InventoryMangement/DeleteProductDialog";
+import AddProductDialog from "../../components/Inventory/AddProductDialog";
+import EditProductDialog from "../../components/Inventory/EditProductDialog";
+import DeleteProductDialog from "../../components/Inventory/DeleteProductDialog";
 import { useAuth } from "../../contexts/AuthContext";
 import SearchField from "../../components/shared/SearchField";
-import { formatDate, formatCurrency } from "../../utils/formatters";
+import { formatCurrency } from "../../utils/formatters";
 
 export default function Inventory() {
-  const { products, loading, deleteProduct, updateStock, addProduct, updateProduct } = useProducts();
+  const { products, loading, deleteProduct, addProduct, updateProduct } = useProducts();
 
   const { user } = useAuth();
 
@@ -51,9 +51,13 @@ export default function Inventory() {
   };
 
   const handleSaveNewProduct = (newProductData) => {
+    const origPrice = Number(newProductData.price) || 0;
+    const disc = Number(newProductData.discount) || 0;
     addProduct({
       ...newProductData,
-      price: Number(newProductData.price),
+      originalPrice: origPrice,
+      discount: disc,
+      price: origPrice - (origPrice * disc) / 100,
       stock: Number(newProductData.stock),
       minStock: Number(newProductData.minStock),
     });
@@ -61,9 +65,13 @@ export default function Inventory() {
   };
 
   const handleSaveEditProduct = (updatedData) => {
+    const origPrice = Number(updatedData.price) || 0;
+    const disc = Number(updatedData.discount) || 0;
     updateProduct(updatedData.id, {
       ...updatedData,
-      price: Number(updatedData.price),
+      originalPrice: origPrice,
+      discount: disc,
+      price: origPrice - (origPrice * disc) / 100,
       stock: Number(updatedData.stock),
       minStock: Number(updatedData.minStock),
     });
@@ -81,7 +89,7 @@ export default function Inventory() {
     },
     { field: "name", headerName: "الموديل", flex: 1, headerAlign: "center", align: "center" },
     {
-      field: "price",
+      field: "originalPrice",
       headerName: "السعر",
       width: 130,
       headerAlign: "center",
@@ -89,6 +97,37 @@ export default function Inventory() {
       renderCell: (params) => (
         <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", width: "100%" }}>
           <Typography color="primary.main" fontWeight="bold">
+            {formatCurrency(params.value)}
+          </Typography>
+        </Box>
+      ),
+    },
+    {
+      field: "discount",
+      headerName: "الخصم",
+      width: 100,
+      headerAlign: "center",
+      align: "center",
+      renderCell: (params) => {
+        const value = params.value || 0;
+        return value > 0 ? (
+          <Chip label={`${value}%-`} color="error" size="small" sx={{ fontWeight: "bold", borderRadius: 1 }} />
+        ) : (
+          <Typography variant="caption" color="text.disabled">
+            0%
+          </Typography>
+        );
+      },
+    },
+    {
+      field: "price",
+      headerName: "صافي السعر",
+      width: 130,
+      headerAlign: "center",
+      align: "center",
+      renderCell: (params) => (
+        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", width: "100%" }}>
+          <Typography color="success.main" fontWeight="bold">
             {formatCurrency(params.value)}
           </Typography>
         </Box>
@@ -155,7 +194,7 @@ export default function Inventory() {
   ];
 
   return (
-    <Box sx={{ p: 3, direction: "ltr" }}>
+    <Box sx={{ p: 3 }}>
       {/* Header Section */}
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
         <Typography variant="h4" sx={{ fontWeight: "bold", color: "primary.main" }}>

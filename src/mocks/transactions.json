@@ -9,7 +9,9 @@
     "status": "closed",
     "closedAt": "1/21/2026, 10:32:23 PM",
     "paymentMethod": "cash",
-    "items": [{ "id": 13, "name": "iPad Air M2", "price": 38000, "quantity": 1 }],
+    "items": [
+      { "id": 13, "name": "iPad Air M2", "originalPrice": 38000, "discount": 0, "price": 38000, "quantity": 1 }
+    ],
     "total": 38000
   },
   {
@@ -22,7 +24,9 @@
     "status": "closed",
     "closedAt": "1/21/2026, 10:32:23 PM",
     "paymentMethod": "visa",
-    "items": [{ "id": 6, "name": "Apple Watch Series 9", "price": 22000, "quantity": 1 }],
+    "items": [
+      { "id": 6, "name": "Apple Watch Series 9", "originalPrice": 22000, "discount": 0, "price": 22000, "quantity": 1 }
+    ],
     "total": 22000
   },
   {
@@ -34,7 +38,16 @@
     "type": "sale",
     "status": "open",
     "paymentMethod": "transfer",
-    "items": [{ "id": 3, "name": "سماعة Apple Airpods Pro 2", "price": 11500, "quantity": 2 }],
+    "items": [
+      {
+        "id": 3,
+        "name": "سماعة Apple Airpods Pro 2",
+        "originalPrice": 11500,
+        "discount": 0,
+        "price": 11500,
+        "quantity": 2
+      }
+    ],
     "total": 23000
   },
   {
@@ -46,7 +59,9 @@
     "type": "return",
     "status": "open",
     "paymentMethod": "cash",
-    "items": [{ "id": 15, "name": "كابل iPhone Original", "price": 1200, "quantity": 1 }],
+    "items": [
+      { "id": 15, "name": "كابل iPhone Original", "originalPrice": 1200, "discount": 0, "price": 1200, "quantity": 1 }
+    ],
     "total": 1200
   },
   {
@@ -59,8 +74,8 @@
     "status": "open",
     "paymentMethod": "cash",
     "items": [
-      { "id": 1, "name": "iPhone 15 Pro", "price": 65000, "quantity": 1 },
-      { "id": 19, "name": "جراب MagSafe iPhone 15", "price": 2500, "quantity": 1 }
+      { "id": 1, "name": "iPhone 15 Pro", "originalPrice": 65000, "discount": 0, "price": 65000, "quantity": 1 },
+      { "id": 19, "name": "جراب MagSafe iPhone 15", "originalPrice": 2500, "discount": 0, "price": 2500, "quantity": 1 }
     ],
     "total": 67500
   },
@@ -73,7 +88,9 @@
     "type": "sale",
     "status": "open",
     "paymentMethod": "visa",
-    "items": [{ "id": 8, "name": "شاحن Samsung 25W", "price": 850, "quantity": 4 }],
+    "items": [
+      { "id": 8, "name": "شاحن Samsung 25W", "originalPrice": 850, "discount": 0, "price": 850, "quantity": 4 }
+    ],
     "total": 3400
   },
   {
@@ -85,7 +102,9 @@
     "type": "sale",
     "status": "open",
     "paymentMethod": "cash",
-    "items": [{ "id": 4, "name": "Xiaomi 13 Ultra", "price": 42000, "quantity": 1 }],
+    "items": [
+      { "id": 4, "name": "Xiaomi 13 Ultra", "originalPrice": 42000, "discount": 0, "price": 42000, "quantity": 1 }
+    ],
     "total": 42000
   },
   {
@@ -97,7 +116,9 @@
     "type": "return",
     "status": "open",
     "paymentMethod": "visa",
-    "items": [{ "id": 6, "name": "Apple Watch Series 9", "price": 22000, "quantity": 1 }],
+    "items": [
+      { "id": 6, "name": "Apple Watch Series 9", "originalPrice": 22000, "discount": 0, "price": 22000, "quantity": 1 }
+    ],
     "total": 22000
   }
 ]
