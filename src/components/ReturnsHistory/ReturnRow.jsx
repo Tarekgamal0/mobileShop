@@ -17,7 +17,7 @@ export default function ReturnRow({ ret }) {
           </IconButton>
         </TableCell>
         <TableCell sx={{ fontWeight: "bold" }}>RET-{ret.id.toString().slice(-4)}</TableCell>
-        <TableCell>#{ret.InvoiceNumber}</TableCell>
+        <TableCell>#{ret.invoiceNumber}</TableCell>
         <TableCell>{formatDate(ret.date)}</TableCell>
         <TableCell>{ret.customer.name}</TableCell>
         <TableCell align="left" sx={{ color: "error.main", fontWeight: "bold" }}>

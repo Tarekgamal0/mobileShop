@@ -63,7 +63,7 @@ export default function ReturnDialog({ open, onClose, transaction, onConfirm }) 
         name: transaction.customer.name || "عميل نقدي", // اسم افتراضي إذا لم يدخل اسم
         phone: transaction.customer.phone || "غير مسجل",
       },
-      InvoiceNumber: transaction.invoiceNumber,
+      invoiceNumber: transaction.invoiceNumber,
     };
     onConfirm(returnData);
   };
