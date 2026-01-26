@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Stack, TextField } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Stack, TextField, MenuItem } from "@mui/material";
+
+import { CATEGORIES } from "../../constants/categories";
 
 export default function AddProductDialog({ open, onClose, onSave }) {
   const initialValues = {
@@ -50,6 +52,20 @@ export default function AddProductDialog({ open, onClose, onSave }) {
       <DialogTitle sx={{ fontWeight: "bold" }}>إضافة منتج جديد</DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ mt: 1 }}>
+          <TextField
+            select // هذه الخاصية تحول الحقل إلى Select Box
+            label="القسم"
+            name="category"
+            fullWidth
+            value={newProduct.category || ""} // أو formData.category في حال التعديل
+            onChange={handleChange}
+          >
+            {CATEGORIES.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </TextField>
           <TextField label="اسم الموديل" name="name" fullWidth value={newProduct.name} onChange={handleChange} />
           <TextField label="الماركة" name="brand" fullWidth value={newProduct.brand} onChange={handleChange} />
           <Stack direction="row" spacing={2}>
