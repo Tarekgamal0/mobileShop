@@ -233,7 +233,7 @@ export default function Inventory() {
       />
 
       {/* DataGrid Section */}
-      <Paper sx={{ height: 650, width: "100%", borderRadius: 2, overflow: "hidden" }}>
+      <Paper sx={{ height: 600, width: "100%", borderRadius: 2, overflow: "hidden" }}>
         <DataGrid
           rows={filteredProducts}
           columns={columns}

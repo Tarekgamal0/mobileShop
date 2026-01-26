@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react";
-import { useTransactions } from "../../contexts/TransactionsContext";
-import { Box, Typography, Grid } from "@mui/material";
+import { Box, Typography, Grid, Paper } from "@mui/material";
 import {
   Assessment as AssessmentIcon,
   Print as PrintIcon,
@@ -15,13 +14,19 @@ import MiniStatCard from "../../components/Dashboard/MiniStatCard";
 import ProductRankingList from "../../components/Dashboard/ProductRankingList";
 import InfoCard from "../../components/Dashboard/InfoCard";
 import ShiftSummaryCard from "../../components/Dashboard/ShiftSummaryCard";
+
 import { formatDate, formatCurrency } from "../../utils/formatters";
+import { useTransactions } from "../../contexts/TransactionsContext";
+import { getDashboardStats } from "../../services/dashboardStats";
+import SaleLayout from "../../components/Dashboard/SaleLayout";
+import ReturnLayout from "../../components/Dashboard/ReturnLayout";
+import CustomerLayout from "../../components/Dashboard/CustomerLayout";
 
 export default function Dashboard() {
-  const { transactions, getDashboardStats } = useTransactions();
+  const { transactions } = useTransactions();
   const [openXReport, setOpenXReport] = useState(false);
 
-  const stats = useMemo(() => getDashboardStats(), [getDashboardStats]);
+  const stats = useMemo(() => getDashboardStats(transactions), [transactions]);
 
   // حساب بيانات الوردية الحالية بالتفصيل (للكاش والفيزا والتحويل)
   const currentShiftData = useMemo(() => {
@@ -61,8 +66,8 @@ export default function Dashboard() {
       </Typography>
 
       <Grid container spacing={3}>
+        {/* العمود الجانبي: الوردية الحالية */}
         <Grid size={{ xs: 12, lg: 4 }}>
-          {/* تمرير البيانات كاملة للمكون */}
           <ShiftSummaryCard
             title="الوردية الحالية"
             netTotal={currentShiftData.netTotal}
@@ -74,39 +79,15 @@ export default function Dashboard() {
           />
         </Grid>
 
+        {/* العمود الرئيسي: الإحصائيات العامة */}
         <Grid size={{ xs: 12, md: 8 }}>
           <Grid container spacing={2}>
-            <Grid size={{ xs: 12, md: 4 }}>
-              <MiniStatCard title="دخل اليوم" value={stats.revenue.daily} icon={<TrendingUpIcon />} color="#2e7d32" />
-            </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
-              <MiniStatCard
-                title="دخل الأسبوع"
-                value={stats.revenue.weekly}
-                icon={<ShoppingCartIcon />}
-                color="#1976d2"
-              />
-            </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
-              <MiniStatCard title="دخل الشهر" value={stats.revenue.monthly} icon={<AssessmentIcon />} color="#9c27b0" />
-            </Grid>
-
-            <Grid size={{ xs: 12, md: 6 }}>
-              <InfoCard
-                title="إجمالي العملاء المسجلين"
-                value={stats.totalCustomers.size}
-                icon={<PeopleIcon />}
-                iconColor="#ed6c02" // لون برتقالي
-              />
-            </Grid>
-            <Grid size={{ xs: 12, md: 6 }}>
-              <InfoCard
-                title="مرتجعات الشهر الحالي"
-                value={formatCurrency(stats.returns.monthly)}
-                icon={<ReturnIcon />}
-                iconColor="#d32f2f" // لون أحمر
-              />
-            </Grid>
+            {/* قسم إحصائيات الدخل المالي */}
+            <SaleLayout stats={stats} />
+            {/* قسم إحصائيات الاسترجاع */}
+            <ReturnLayout stats={stats} />
+            {/*  إحصائيات العملاء الجدد والقدامى */}
+            <CustomerLayout stats={stats} />
           </Grid>
 
           {/* ترتيب المنتجات */}
