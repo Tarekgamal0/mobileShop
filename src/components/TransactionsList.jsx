@@ -23,7 +23,7 @@ export default function TransactionsList({ transactions }) {
         component={Paper}
         variant="outlined"
         className="print-table"
-        sx={{ maxHeight: 200, overflowY: "auto" }}
+        sx={{ maxHeight: 200, overflowY: "auto", direction: "rtl" }}
       >
         <Table size="small" stickyHeader sx={{ direction: "ltr" }}>
           <TableHead>
